@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-02-american-early-exercise",
+ "category": "derivatives-pricing",
+ "difficulty": "hard",
+ "tags": [
+  "american",
+  "binomial",
+  "early-exercise"
+ ],
+ "title": "American vs European put, and the early-exercise premium",
+ "keywords": [
+  "put",
+  "american",
+  "european",
+  "task",
+  "prices",
+  "same",
+  "contracts",
+  "one",
+  "contract",
+  "columns",
+  "contract_id",
+  "price",
+  "premium",
+  "two",
+  "european_put",
+  "american_put",
+  "environment",
+  "parquet",
+  "row",
+  "spot",
+  "strike",
+  "expiry_years",
+  "rate",
+  "vol",
+  "parameters",
+  "report",
+  "early-exercise",
+  "defined",
+  "minus",
+  "numerical",
+  "method",
+  "legs",
+  "priced",
+  "consistently",
+  "difference",
+  "between",
+  "your",
+  "own",
+  "numbers",
+  "never"
+ ],
+ "deliverables": [
+  "contracts.parquet",
+  "put_prices.csv"
+ ],
+ "source": "\"\"\"European and American puts on the same contracts, priced on ONE lattice.\n\nConsistency is the requirement that matters: the early-exercise premium is a\ndifference of two of our own numbers and must never be negative. Pricing both\nlegs by backward induction on the same Cox-Ross-Rubinstein tree guarantees it\nnode by node - the American value is max(continuation, exercise) >= the\nEuropean continuation value at every node, so the root inherits the ordering.\n\nAccuracy: a CRR tree converges at O(1/N) with an odd/even oscillation.\nAveraging the N and N+1 step prices cancels most of the oscillation; with\nN = 2000 the European leg sits well inside 0.01 of the continuous model, and\nthe ordering still holds because it holds for each tree separately.\n\"\"\"\nimport math\nimport os\n\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import norm\n\nINPUT = \"/input/environment/data/contracts.parquet\"\nOUT = \"/app/output/put_prices.csv\"\nSTEPS = 2000\n\n\ndef crr_puts(spot: float, strike: float, t: float, r: float, vol: float, n: int) -> tuple[float, float]:\n    dt = t / n\n    u = math.exp(vol * math.sqrt(dt))\n    d = 1.0 / u\n    disc = math.exp(-r * dt)\n    p = (math.exp(r * dt) - d) / (u - d)\n    j = np.arange(n + 1)\n    prices = spot * u ** (n - j) * d ** j            # terminal prices, highest first\n    payoff = np.maximum(strike - prices, 0.0)\n    euro = payoff.copy()\n    amer = payoff.copy()\n    for step in range(n - 1, -1, -1):\n        prices = prices[:-1] * d                      # prices one step earlier\n        euro = disc * (p * euro[:-1] + (1.0 - p) * euro[1:])\n        cont = disc * (p * amer[:-1] + (1.0 - p) * amer[1:])\n        amer = np.maximum(cont, strike - prices)\n    return float(euro[0]), float(amer[0])\n\n\ndef bs_put(spot, strike, t, r, vol):\n    vt = vol * math.sqrt(t)\n    d1 = (math.log(spot / strike) + (r + 0.5 * vol * vol) * t) / vt\n    d2 = d1 - vt\n    return strike * math.exp(-r * t) * norm.cdf(-d2) - spot * norm.cdf(-d1)\n\n\ndef main() -> None:\n    contracts = pd.read_parquet(INPUT)\n    rows = []\n    for c in contracts.itertuples(index=False):\n        args = (float(c.spot), float(c.strike), float(c.expiry_years), float(c.rate), float(c.vol))\n        e1, a1 = crr_puts(*args, STEPS)\n        e2, a2 = crr_puts(*args, STEPS + 1)\n        euro, amer = 0.5 * (e1 + e2), 0.5 * (a1 + a2)\n        # The lattice European leg must agree with the closed form - a guard\n        # on the discretisation, not a substitute for it.\n        assert abs(euro - bs_put(*args)) < 0.01, f\"{c.contract_id}: lattice off closed form\"\n        rows.append({\"contract_id\": c.contract_id, \"european_put\": euro,\n                     \"american_put\": amer, \"early_exercise_premium\": amer - euro})\n\n    out = pd.DataFrame(rows, columns=[\"contract_id\", \"european_put\", \"american_put\",\n                                      \"early_exercise_premium\"])\n    assert len(out) == len(contracts)\n    assert (out[\"early_exercise_premium\"] >= -1e-12).all(), \"premium can never be negative\"\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_csv(OUT, index=False)\n    back = pd.read_csv(OUT)\n    assert list(back.columns) == list(out.columns) and len(back) == len(contracts)\n    print(f\"priced {len(out)} contracts; max premium {out['early_exercise_premium'].max():.4f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-02-american-early-exercise\\20260915T112707"
+ }
+}

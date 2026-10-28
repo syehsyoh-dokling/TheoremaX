@@ -1,0 +1,72 @@
+{
+ "task_id": "t1-ewma-portfolio-risk-decomposition",
+ "category": "risk-management",
+ "difficulty": "medium",
+ "tags": [
+  "python",
+  "numpy",
+  "covariance",
+  "ewma",
+  "risk-decomposition",
+  "var"
+ ],
+ "title": "Ewma Portfolio Risk Decomposition",
+ "keywords": [
+  "float",
+  "covariance",
+  "template",
+  "risk",
+  "json",
+  "portfolio",
+  "app",
+  "spy",
+  "tlt",
+  "ewma",
+  "gld",
+  "ief",
+  "efa",
+  "decomposition",
+  "euler",
+  "asset",
+  "implementation",
+  "correct",
+  "matrix",
+  "volatility",
+  "fix",
+  "script",
+  "var",
+  "standard",
+  "params",
+  "you",
+  "debug",
+  "python",
+  "parametric",
+  "but",
+  "results",
+  "bugs",
+  "references",
+  "riskmetrics",
+  "estimation",
+  "attribution",
+  "date",
+  "parameters",
+  "weights",
+  "assets"
+ ],
+ "deliverables": [
+  "params.json",
+  "results.json",
+  "returns.csv",
+  "solution.json"
+ ],
+ "source": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy import stats\nimport os\n\n# Read parameters\nwith open('/input/environment/data/params.json', 'r') as f:\n    params = json.load(f)\n\nlambda_val = params['lambda']\nconfidence_level = params['confidence_level']\nweights = np.array(params['weights'])\nannualization_factor = params['annualization_factor']\nassets = params['assets']\nestimation_window_days = params['estimation_window_days']\n\n# Read returns\ndf = pd.read_csv('/input/environment/data/returns.csv')\nreturns = df[assets].values\nn_obs, n_assets = returns.shape\n\n# Use the most recent 'estimation_window_days' returns for EWMA\nif n_obs < estimation_window_days:\n    window_returns = returns\nelse:\n    window_returns = returns[-estimation_window_days:]\n\nn_window = window_returns.shape[0]\n\n# EWMA covariance initialization: outer product of first return in window\nSigma = np.outer(window_returns[0], window_returns[0])\n# Iterate over the remaining returns in the window\nfor t in range(1, n_window):\n    r_t = window_returns[t].reshape(-1, 1)\n    Sigma = lambda_val * Sigma + (1 - lambda_val) * (r_t @ r_t.T)\n\n# Extract required covariance elements\newma_cov_0_0 = float(Sigma[0, 0])\newma_cov_0_1 = float(Sigma[0, 1])\newma_cov_1_1 = float(Sigma[1, 1])\newma_cov_2_3 = float(Sigma[2, 3])\newma_cov_3_4 = float(Sigma[3, 4])\n\n# Portfolio variance and volatility\nportfolio_variance = float(weights @ Sigma @ weights)\nportfolio_vol = np.sqrt(portfolio_variance)\n\n# Parametric VaR\nz = float(stats.norm.ppf(confidence_level))\nvar_99_parametric = z * portfolio_vol\n\n# Annualized volatility\nannualized_vol = portfolio_vol * np.sqrt(annualization_factor)\n\n# Marginal risk component\nmarginal_risk_vec = (Sigma @ weights) / portfolio_vol\ncomponent_risk_vec = weights * marginal_risk_vec\npct_risk_contrib_vec = component_risk_vec / portfolio_vol\n\n# Build dictionaries\nmarginal_risk = {asset: marginal_risk_vec[i] for i, asset in enumerate(assets)}\ncomponent_risk = {asset: component_risk_vec[i] for i, asset in enumerate(assets)}\npct_risk_contribution = {asset: pct_risk_contrib_vec[i] for i, asset in enumerate(assets)}\n\n# Write results.json\nresults = {\n    \"portfolio_daily_vol\": float(portfolio_vol),\n    \"var_99_parametric\": float(var_99_parametric),\n    \"annualized_vol\": float(annualized_vol)\n}\nos.makedirs('/app/output', exist_ok=True)\nwith open('/app/output/results.json', 'w') as f:\n    json.dump(results, f, indent=2)\n\n# Write solution.json\nsolution = {\n    \"intermediates\": {\n        \"ewma_cov_0_0\": ewma_cov_0_0,\n        \"ewma_cov_0_1\": ewma_cov_0_1,\n        \"ewma_cov_1_1\": ewma_cov_1_1,\n        \"ewma_cov_2_3\": ewma_cov_2_3,\n        \"ewma_cov_3_4\": ewma_cov_3_4,\n        \"portfolio_variance\": portfolio_variance,\n        \"marginal_risk\": marginal_risk,\n        \"component_risk\": component_risk,\n        \"pct_risk_contribution\": pct_risk_contribution\n    }\n}\nwith open('/app/output/solution.json', 'w') as f:\n    json.dump(solution, f, indent=2)\n\n# Verification assertions\nassert np.isclose(np.sum(weights), 1.0, atol=1e-10), \"Weights do not sum to 1\"\nport_var_check = weights @ Sigma @ weights\nassert np.isclose(portfolio_variance, port_var_check, atol=1e-10), \"Portfolio variance mismatch\"\nassert np.isclose(portfolio_vol, np.sqrt(portfolio_variance), atol=1e-10), \"Portfolio vol not sqrt of variance\"\nassert np.isclose(annualized_vol, portfolio_vol * np.sqrt(annualization_factor), atol=1e-10), \"Annualized vol mismatch\"\nassert np.isclose(var_99_parametric, z * portfolio_vol, atol=1e-10), \"VaR mismatch\"\nmarginal_check = (Sigma @ weights) / portfolio_vol\nassert np.allclose(marginal_risk_vec, marginal_check, atol=1e-10), \"Marginal risk mismatch\"\ncomp_check = weights * marginal_risk_vec\nassert np.allclose(component_risk_vec, comp_check, atol=1e-10), \"Component risk mismatch\"\nassert np.isclose(np.sum(pct_risk_contrib_vec), 1.0, atol=1e-10), \"Percentage risk contributions do not sum to 1\"\npct_check = (weights * (Sigma @ weights)) / portfolio_variance\nassert np.allclose(pct_risk_contrib_vec, pct_check, atol=1e-10), \"Percentage risk contribution formula mismatch\"\nassert np.isclose(np.sum(component_risk_vec), portfolio_vol, atol=1e-10), \"Component risk contributions do not sum to portfolio vol\"",
+ "provenance": {
+  "state": "base87_nemotron_a_regraded.json",
+  "attempt": "attempt0",
+  "run_pass_count": 18,
+  "passed_in_runs": [
+   "base87_nemotron_a_regraded.json"
+  ]
+ },
+ "notes": "# EWMA covariance, parametric VaR and Euler risk decomposition (debug-and-fix)\n\n## 1. Task type\nRiskMetrics EWMA covariance estimate -> portfolio volatility -> normal\nparametric VaR -> Euler (marginal / component / percent) risk attribution;\ndelivered as a fix of a buggy template script.\n\n## 2. Method (order the verified program follows)\n1. Read ALL parameters from the params file: decay lambda, confidence level,\n   weights, annualisation factor, ordered asset list, estimation window length.\n   Any parameter present in the config but unused by the template is a bug.\n2. Load returns; select columns in the params asset order.\n3. Keep only the most recent `estimation_window_days` rows (all rows if fewer).\n4. Seed Sigma_0 = outer(r_0, r_0) using the FIRST return of the window.\n5. Recursion over the remaining window rows:\n   Sigma_t = lambda Sigma_{t-1} + (1 - lambda) r_t r_t^T  (outer product).\n6. Portfolio variance w^T Sigma w; daily vol = sqrt.\n7. z = Phi^{-1}(confidence) via scipy (exact), VaR = z * daily vol.\n8. Annualised vol = daily vol * sqrt(annualisation factor).\n9. Euler decomposition: marginal = Sigma w / sigma_p; component = w * marginal;\n   percent = component / sigma_p.\n10. Write the results file and the intermediates file (selected covariance\n    entries by 0-based indices, dicts keyed by asset).\n\n## 3. Formulas\n- Sigma_t = lambda Sigma_{t-1} + (1-lambda) r_t r_t^T (RiskMetrics, zero-mean\n  assumption: returns are NOT demeaned).\n- sigma_p^2 = w^T Sigma w, sigma_p = sqrt(sigma_p^2).\n- VaR_alpha = z_alpha sigma_p, z_alpha = Phi^{-1}(alpha) (no mean term, loss\n  reported as a positive number in return units, one-day horizon).\n- sigma_ann = sigma_p sqrt(A), A = trading days per year from params.\n- MR_i = d sigma_p / d w_i = (Sigma w)_i / sigma_p.\n- CR_i = w_i MR_i; PCR_i = CR_i / sigma_p = w_i (Sigma w)_i / sigma_p^2.\n\n## 4. Conventions\n- Simple daily returns as given; no demeaning (RiskMetrics assumes zero mean).\n- Recursion seeded with the first observation's outer product, not a sample\n  covariance, and not zeros; the recursion starts from the second window row.\n- Window = last N rows (most recent), in chronological order.\n- z from `norm.ppf`, not a rounded table value like 2.33 or 2.326.\n- Units: vol and VaR as decimals of portfolio value (not %).\n- Covariance entries addressed by 0-based index in params asset order.\n- Output dicts keyed by asset name in params order; plain floats.\n\n## 5. Identities / sanity checks\n- Weights sum to 1 (if the params say so).\n- Sum of component risks = sigma_p (Euler homogeneity, degree 1).\n- Sum of percent contributions = 1.\n- PCR_i = w_i (Sigma w)_i / (w^T Sigma w).\n- Sigma symmetric, PSD, diagonal positive.\n- VaR / daily vol = z; annual / daily vol = sqrt(A).\n- Negative component risk is legitimate for hedging assets (e.g. bonds vs\n  equities); it is not a bug.\n\n## 6. Pitfalls (the template's seeded bugs are typical of this family)\n- Demeaning returns before EWMA (\"for better estimation\") \u2014 wrong for RiskMetrics.\n- `np.dot(r, r)` of two 1-D vectors gives a SCALAR (inner product), silently\n  broadcast into the matrix; the rank-1 update needs `np.outer(r, r)` or\n  r.reshape(-1,1) @ r.reshape(1,-1).\n- Hard-coded z (e.g. 2.33) instead of the exact quantile at the given confidence.\n- Ignoring the estimation-window parameter (running over the full history).\n- Marginal risk = Sigma w * sigma_p instead of Sigma w / sigma_p (then the\n  Euler sums break: check sum(CR) = sigma_p).\n- Using (1-lambda) and lambda swapped.\n- Scaling VaR by sqrt(A) when a daily VaR is asked.\n- Debug tasks: fix only computational logic; keep the template's I/O layout,\n  key names, and output paths.\n\n## 7. Incomplete / ambiguous inputs\n- If the data have fewer rows than the window, use all rows.\n- Asset order is taken from params, not from the CSV column order.\n- Confidence level, lambda and annualisation factor come from params (never\n  assume 0.94 / 0.99 / 252 even though these are the usual defaults).\n- Mean return is assumed zero in both the covariance and the VaR."
+}

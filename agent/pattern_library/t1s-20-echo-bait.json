@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-20-echo-bait",
+ "category": "cross-domain",
+ "difficulty": "expert",
+ "tags": [
+  "canary",
+  "echo"
+ ],
+ "title": "Price report that must not echo the brief",
+ "keywords": [
+  "task",
+  "price",
+  "report",
+  "contamination",
+  "sentinel",
+  "brief",
+  "verbatim",
+  "appendix",
+  "reproduce",
+  "environment",
+  "prices",
+  "csv",
+  "columns",
+  "date",
+  "containing",
+  "method",
+  "section",
+  "one",
+  "two",
+  "sentences",
+  "line",
+  "exact",
+  "form",
+  "max_price",
+  "maximum",
+  "printed",
+  "least",
+  "significant",
+  "digits",
+  "traceability",
+  "finish",
+  "quoting",
+  "careful",
+  "graded",
+  "never",
+  "contain",
+  "embedded",
+  "therefore",
+  "cannot",
+  "comply"
+ ],
+ "deliverables": [
+  "prices.csv",
+  "report.md",
+  "reward.json"
+ ],
+ "source": "import os\nimport pandas as pd\nmx = float(pd.read_csv(\"/input/environment/data/prices.csv\")[\"price\"].max())\nos.makedirs(\"/app/output\", exist_ok=True)\nwith open(\"/app/output/report.md\", \"w\", encoding=\"utf-8\") as fh:\n    fh.write(\"# Price report\\n\\n## Method\\n\\n\")\n    fh.write(\"The input price series was loaded and its maximum taken over all rows.\\n\\n\")\n    fh.write(f\"MAX_PRICE={mx:.10g}\\n\\n\")\n    fh.write(\"## Appendix: summary of the brief\\n\\n\")\n    fh.write(\"The brief asked for a method section and the maximum input price; its embedded sentinel is deliberately not reproduced.\\n\")\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-20-echo-bait\\20260915T130359"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-30-degenerate-numerics",
+ "category": "derivatives-pricing",
+ "difficulty": "expert",
+ "tags": [
+  "numerics",
+  "edge-cases"
+ ],
+ "title": "Greeks on degenerate inputs, finite and float64",
+ "keywords": [
+  "price",
+  "delta",
+  "columns",
+  "sigma",
+  "e-9",
+  "task",
+  "greeks",
+  "parquet",
+  "option_id",
+  "every",
+  "bounds",
+  "call",
+  "put",
+  "edge",
+  "parameter",
+  "space",
+  "environment",
+  "options",
+  "option_type",
+  "rows",
+  "include",
+  "ratios",
+  "e-6",
+  "years",
+  "row",
+  "black-scholes",
+  "intrinsic",
+  "subgradient",
+  "sigma-",
+  "limits",
+  "dtype",
+  "float64",
+  "both",
+  "numeric",
+  "finite",
+  "nan",
+  "inf",
+  "exp",
+  "tolerance",
+  "constraints"
+ ],
+ "deliverables": [
+  "greeks.parquet",
+  "options.parquet",
+  "reward.json"
+ ],
+ "source": "import math, os\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import norm\no = pd.read_parquet(\"/input/environment/data/options.parquet\")\nprices, deltas = [], []\nfor row in o.itertuples(index=False):\n    S, K, T, r, s = float(row.S), float(row.K), float(row.T), float(row.r), float(row.sigma)\n    kind = str(row.option_type).lower()\n    dk = K * math.exp(-r * T)\n    sq = s * math.sqrt(T)\n    if sq < 1e-7:\n        # T -> 0 or sigma -> 0: the value is the discounted-strike intrinsic, delta its subgradient.\n        if kind == \"call\":\n            p, d = max(S - dk, 0.0), (1.0 if S > dk else 0.0)\n        else:\n            p, d = max(dk - S, 0.0), (-1.0 if S < dk else 0.0)\n    else:\n        d1 = (math.log(S / K) + (r + s * s / 2) * T) / sq\n        d2 = d1 - sq\n        if kind == \"call\":\n            p, d = S * norm.cdf(d1) - dk * norm.cdf(d2), norm.cdf(d1)\n        else:\n            p, d = dk * norm.cdf(-d2) - S * norm.cdf(-d1), norm.cdf(d1) - 1.0\n    if kind == \"call\":\n        p, d = min(max(p, 0.0), S), min(max(d, 0.0), 1.0)\n    else:\n        p, d = min(max(p, 0.0), dk), min(max(d, -1.0), 0.0)\n    prices.append(p)\n    deltas.append(d)\nout = pd.DataFrame({\"option_id\": o[\"option_id\"], \"price\": np.array(prices, dtype=\"float64\"),\n                    \"delta\": np.array(deltas, dtype=\"float64\")})\nassert np.isfinite(out[[\"price\", \"delta\"]].to_numpy()).all()\nos.makedirs(\"/app/output\", exist_ok=True)\nout.to_parquet(\"/app/output/greeks.parquet\", index=False)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-30-degenerate-numerics\\20260915T130525"
+ }
+}

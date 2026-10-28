@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-20-covered-interest-parity",
+ "category": "fx",
+ "difficulty": "hard",
+ "tags": [
+  "cip",
+  "forwards",
+  "compounding"
+ ],
+ "title": "Forward rates from covered interest parity",
+ "keywords": [
+  "forward",
+  "spot",
+  "currency",
+  "task",
+  "rates",
+  "covered",
+  "interest",
+  "parity",
+  "csv",
+  "columns",
+  "pair_id",
+  "base_rate",
+  "quote_rate",
+  "one",
+  "converting",
+  "environment",
+  "fx_inputs",
+  "tenor_years",
+  "quoted",
+  "units",
+  "quote",
+  "unit",
+  "base",
+  "both",
+  "annually",
+  "compounded",
+  "decimals",
+  "says",
+  "leave",
+  "arbitrage",
+  "between",
+  "borrowing",
+  "investing",
+  "other",
+  "back",
+  "report",
+  "points",
+  "minus",
+  "annualised",
+  "premium"
+ ],
+ "deliverables": [
+  "forwards.csv",
+  "fx_inputs.csv"
+ ],
+ "source": "\"\"\"Forward FX under covered interest parity, annually compounded rates.\n\nforward = spot * (1 + quote_rate)^T / (1 + base_rate)^T\nforward_points = forward - spot\nannualised_premium = (forward / spot)^(1/T) - 1   (== (1+rq)/(1+rb) - 1, asserted)\n\"\"\"\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/fx_inputs.csv\"\nOUT = \"/app/output/forwards.csv\"\n\n\ndef main() -> None:\n    fx = pd.read_csv(INPUT)\n    s = fx[\"spot\"].to_numpy(float)\n    rb = fx[\"base_rate\"].to_numpy(float)\n    rq = fx[\"quote_rate\"].to_numpy(float)\n    t = fx[\"tenor_years\"].to_numpy(float)\n\n    fwd = s * (1.0 + rq) ** t / (1.0 + rb) ** t\n    prem = (fwd / s) ** (1.0 / t) - 1.0\n    assert np.allclose(prem, (1.0 + rq) / (1.0 + rb) - 1.0, rtol=1e-10, atol=1e-13)\n\n    out = pd.DataFrame({\"pair_id\": fx[\"pair_id\"], \"forward\": fwd,\n                        \"forward_points\": fwd - s, \"annualised_premium\": prem})\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_csv(OUT, index=False, float_format=\"%.17g\")\n    assert list(pd.read_csv(OUT).columns) == [\"pair_id\", \"forward\", \"forward_points\", \"annualised_premium\"]\n    print(out.head())\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-20-covered-interest-parity\\20260915T113821"
+ }
+}

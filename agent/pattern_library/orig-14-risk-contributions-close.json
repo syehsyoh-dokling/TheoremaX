@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-14-risk-contributions-close",
+ "category": "portfolio",
+ "difficulty": "hard",
+ "tags": [
+  "risk-decomposition",
+  "euler",
+  "additivity"
+ ],
+ "title": "Marginal and total risk contributions that add up",
+ "keywords": [
+  "asset",
+  "portfolio",
+  "variance",
+  "task",
+  "decompose",
+  "environment",
+  "parquet",
+  "columns",
+  "weight",
+  "covariance",
+  "contributions",
+  "contribution",
+  "risk",
+  "date",
+  "plus",
+  "one",
+  "column",
+  "holdings",
+  "csv",
+  "already",
+  "summing",
+  "sample",
+  "denominator",
+  "n-1",
+  "per-asset",
+  "vector",
+  "marginal",
+  "i-th",
+  "element",
+  "w_i",
+  "times",
+  "euler",
+  "theorem",
+  "sum",
+  "exactly",
+  "risk_contributions",
+  "marginal_contribution",
+  "risk_contribution",
+  "pct_of_variance"
+ ],
+ "deliverables": [
+  "holdings.csv",
+  "returns.parquet",
+  "risk_contributions.parquet"
+ ],
+ "source": "\"\"\"Euler decomposition of portfolio variance by asset.\n\nmarginal_i = (C w)_i;  risk_contribution_i = w_i * marginal_i;\nsum_i risk_contribution_i = w' C w exactly (Euler, variance is homogeneous of\ndegree 2 after the factor of 1/2 cancels against the w_i weighting).\npct_of_variance is the contribution as a SHARE of total variance (sums to 1).\nWeights are aligned to covariance rows by asset NAME, never by position.\n\"\"\"\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nDATA = \"/input/environment/data\"\nOUT = \"/app/output/risk_contributions.parquet\"\n\n\ndef main() -> None:\n    rets = pd.read_parquet(f\"{DATA}/returns.parquet\")\n    hold = pd.read_csv(f\"{DATA}/holdings.csv\")\n    assets = list(hold[\"asset\"])\n    assert set(assets) <= set(rets.columns), \"every held asset must have returns\"\n    c = np.cov(rets[assets].astype(float).dropna().to_numpy(), rowvar=False, ddof=1)\n    w = hold[\"weight\"].to_numpy(float)\n\n    marginal = c @ w\n    rc = w * marginal\n    total = float(w @ c @ w)\n    assert abs(rc.sum() - total) < 1e-15 + 1e-12 * abs(total), \"contributions must sum to variance\"\n\n    out = pd.DataFrame({\"asset\": assets, \"marginal_contribution\": marginal,\n                        \"risk_contribution\": rc, \"pct_of_variance\": rc / total})\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_parquet(OUT, index=False)\n    back = pd.read_parquet(OUT)\n    assert list(back.columns) == list(out.columns) and len(back) == len(assets)\n    print(out)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-14-risk-contributions-close\\20260915T113721"
+ }
+}

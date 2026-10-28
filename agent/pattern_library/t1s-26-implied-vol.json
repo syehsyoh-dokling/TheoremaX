@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-26-implied-vol",
+ "category": "derivatives-pricing",
+ "difficulty": "expert",
+ "tags": [
+  "numerics",
+  "tolerance"
+ ],
+ "title": "Implied volatility recovery at 1e-6 repricing tolerance",
+ "keywords": [
+  "row",
+  "task",
+  "implied",
+  "volatility",
+  "parquet",
+  "columns",
+  "option_id",
+  "every",
+  "present",
+  "inversion",
+  "environment",
+  "options",
+  "option_type",
+  "price",
+  "black-scholes",
+  "prices",
+  "dividends",
+  "recover",
+  "preserving",
+  "order",
+  "grading",
+  "reprices",
+  "your",
+  "absolute",
+  "repricing",
+  "error",
+  "exceed",
+  "e-6",
+  "usd",
+  "lie",
+  "short-dated",
+  "deep",
+  "out-of-the-money",
+  "rows",
+  "bisection",
+  "fixed",
+  "e-4",
+  "exit",
+  "pass",
+  "them"
+ ],
+ "deliverables": [
+  "iv.parquet",
+  "options.parquet",
+  "reward.json"
+ ],
+ "source": "import math, os\nimport pandas as pd\nfrom scipy.optimize import brentq\nfrom scipy.stats import norm\ndef price(S, K, T, r, sig, kind):\n    sq = sig * math.sqrt(T)\n    d1 = (math.log(S / K) + (r + sig * sig / 2) * T) / sq\n    d2 = d1 - sq\n    if kind == \"call\":\n        return S * norm.cdf(d1) - K * math.exp(-r * T) * norm.cdf(d2)\n    return K * math.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)\no = pd.read_parquet(\"/input/environment/data/options.parquet\")\nivs = []\nfor row in o.itertuples(index=False):\n    kind = str(row.option_type).lower()\n    f = lambda s: price(row.S, row.K, row.T, row.r, s, kind) - row.price\n    lo, hi = 1e-6, 3.0 - 1e-9\n    if f(lo) >= 0:\n        iv = lo\n    elif f(hi) <= 0:\n        iv = hi\n    else:\n        iv = brentq(f, lo, hi, xtol=1e-16, rtol=1e-15, maxiter=1000)\n    if abs(f(iv)) > 1e-6:\n        print(\"WARNING repricing\", row.option_id, f(iv))\n    ivs.append(iv)\nos.makedirs(\"/app/output\", exist_ok=True)\npd.DataFrame({\"option_id\": o[\"option_id\"], \"iv\": ivs}).to_parquet(\"/app/output/iv.parquet\", index=False)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-26-implied-vol\\20260915T130648"
+ }
+}

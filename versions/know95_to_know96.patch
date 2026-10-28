@@ -1,0 +1,28 @@
+﻿diff --git "a/C:\\Users\\Saifuddin\\Documents\\Agenthon-2026\\submissions\\2026-10-13\\t1_know95_ctx/agent_core/genrt/soft_run.py" "b/C:\\Users\\Saifuddin\\Documents\\Agenthon-2026\\submissions\\2026-10-13\\t1_know96_ctx/agent_core/genrt/soft_run.py"
+index 49fb1e2..6c1ed53 100644
+--- "a/C:\\Users\\Saifuddin\\Documents\\Agenthon-2026\\submissions\\2026-10-13\\t1_know95_ctx/agent_core/genrt/soft_run.py"
++++ "b/C:\\Users\\Saifuddin\\Documents\\Agenthon-2026\\submissions\\2026-10-13\\t1_know96_ctx/agent_core/genrt/soft_run.py"
+@@ -607,6 +607,23 @@ def _guard_bundle_drift(base, obj):
+         parts = _bundle_parts()
+         if not parts or obj is None:
+             return
++        # know96 (G2): the deliverable NAMES a bundle table ('greeks.csv' <-> bundle['greeks'] / ['greeks.csv']) but
++        # the program emitted a DIFFERENT table - other columns or another row count - rebuilt by hand from the
++        # bundle (an American-option run turned the bundle's 5-row greeks table into 3 rows of the wrong columns)
++        if hasattr(obj, "columns") and hasattr(obj, "shape"):
++            stem = os.path.splitext(str(base))[0].lower()
++            for path, part in parts:
++                key = path.rsplit("[", 1)[-1].strip("]'\" ").lower()
++                if not hasattr(part, "columns") or part is obj or os.path.splitext(key)[0] != stem:
++                    continue
++                if set(map(str, part.columns)) != set(map(str, obj.columns)) or len(part) != len(obj):
++                    _record(f"emit({base!r}): the toolkit bundle already computed this table as {path} "
++                            f"({len(part)} rows, columns {list(map(str, part.columns))[:8]}); the emitted table "
++                            f"has {len(obj)} rows and columns {list(map(str, obj.columns))[:8]} - emit the bundle's "
++                            f"table as is", 0)
++                    print(f"[guard96 bundle] {base}: reshaped from bundle part {path}", file=sys.stderr, flush=True)
++                    return
++                break
+         if hasattr(obj, "columns") and hasattr(obj, "shape"):
+             import numpy as _np
+             for path, part in parts:

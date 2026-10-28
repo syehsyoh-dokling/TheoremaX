@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-23-typed-json-array",
+ "category": "market-microstructure",
+ "difficulty": "hard",
+ "tags": [
+  "format",
+  "json"
+ ],
+ "title": "Aggregated fills as a typed JSON array",
+ "keywords": [
+  "trade_id",
+  "json",
+  "task",
+  "fills",
+  "side",
+  "fill",
+  "aggregation",
+  "environment",
+  "csv",
+  "columns",
+  "fill_qty",
+  "fill_px",
+  "partial",
+  "several",
+  "rows",
+  "trade",
+  "aggregate",
+  "trades",
+  "array",
+  "objects",
+  "sorted",
+  "keys",
+  "string",
+  "buy",
+  "sell",
+  "qty",
+  "total",
+  "quantity",
+  "integer",
+  "decimal",
+  "point",
+  "fill-quantity-weighted",
+  "average",
+  "price",
+  "rounded",
+  "decimals",
+  "tolerance",
+  "within",
+  "e-4",
+  "constraints"
+ ],
+ "deliverables": [
+  "fills.csv",
+  "reward.json",
+  "trades.json"
+ ],
+ "source": "import json, os\nimport pandas as pd\nf = pd.read_csv(\"/input/environment/data/fills.csv\", dtype={\"trade_id\": str})\ndef side_of(v):\n    s = str(v).strip().upper()\n    return \"BUY\" if s in (\"BUY\", \"B\", \"1\", \"+1\", \"1.0\") else \"SELL\" if s in (\"SELL\", \"S\", \"-1\", \"-1.0\") else s\nout = []\nfor tid, g in f.groupby(\"trade_id\", sort=True):\n    qty = float(g[\"fill_qty\"].sum())\n    out.append({\"trade_id\": str(tid), \"side\": side_of(g[\"side\"].iloc[0]), \"qty\": int(round(qty)),\n                \"px\": round(float((g[\"fill_qty\"] * g[\"fill_px\"]).sum() / qty), 4)})\nos.makedirs(\"/app/output\", exist_ok=True)\njson.dump(out, open(\"/app/output/trades.json\", \"w\"), indent=2)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-23-typed-json-array\\20260915T130428"
+ }
+}

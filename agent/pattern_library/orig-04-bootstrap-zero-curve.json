@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-04-bootstrap-zero-curve",
+ "category": "fixed-income",
+ "difficulty": "hard",
+ "tags": [
+  "bootstrap",
+  "discount-factors",
+  "no-arbitrage"
+ ],
+ "title": "Bootstrap a zero curve from annual par yields",
+ "keywords": [
+  "par",
+  "tenor",
+  "discount",
+  "task",
+  "curve",
+  "csv",
+  "tenor_years",
+  "row",
+  "bond",
+  "trading",
+  "coupon",
+  "factors",
+  "annually",
+  "compounded",
+  "them",
+  "bootstrap",
+  "zero-coupon",
+  "environment",
+  "par_curve",
+  "columns",
+  "par_yield",
+  "annual-coupon",
+  "equals",
+  "yield",
+  "price",
+  "recover",
+  "implied",
+  "zero",
+  "rates",
+  "correspond",
+  "pays",
+  "years",
+  "principal",
+  "year",
+  "means",
+  "cash",
+  "flows",
+  "exactly",
+  "every",
+  "integer"
+ ],
+ "deliverables": [
+  "par_curve.csv",
+  "zero_curve.csv"
+ ],
+ "source": "\"\"\"Bootstrap discount factors and annual zero rates from an annual-coupon par curve.\n\nA par bond of tenor n with coupon c_n prices at 1.0:\n    c_n * (DF_1 + ... + DF_n) + DF_n = 1\nso, solving tenors in increasing order,\n    DF_n = (1 - c_n * sum_{i<n} DF_i) / (1 + c_n)\nand the annually compounded zero rate is z_n = DF_n ** (-1/n) - 1.\n\"\"\"\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/par_curve.csv\"\nOUT = \"/app/output/zero_curve.csv\"\n\n\ndef main() -> None:\n    curve = pd.read_csv(INPUT)\n    order = curve.sort_values(\"tenor_years\").reset_index(drop=True)\n    tenors = order[\"tenor_years\"].to_numpy(float)\n    ints = np.rint(tenors).astype(int)\n    assert np.allclose(tenors, ints), \"tenors must be integer years\"\n    assert list(ints) == list(range(1, len(ints) + 1)), \"every integer tenor from 1 must be quoted\"\n\n    dfs = []\n    running = 0.0\n    for c in order[\"par_yield\"].to_numpy(float):\n        df = (1.0 - c * running) / (1.0 + c)\n        dfs.append(df)\n        running += df\n    dfs = np.array(dfs)\n    zero = dfs ** (-1.0 / ints) - 1.0\n\n    # Re-price every par bond from the recovered factors: each must be 1.0.\n    cum = np.cumsum(dfs)\n    reprice = order[\"par_yield\"].to_numpy(float) * cum + dfs\n    assert np.max(np.abs(reprice - 1.0)) < 1e-12, \"par bonds must reprice to 1.0\"\n\n    out = pd.DataFrame({\"tenor_years\": order[\"tenor_years\"], \"discount_factor\": dfs, \"zero_rate\": zero})\n    # Preserve the input's row order in the deliverable.\n    out = out.set_index(\"tenor_years\").loc[curve[\"tenor_years\"]].reset_index()\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_csv(OUT, index=False, float_format=\"%.15g\")\n    back = pd.read_csv(OUT)\n    assert len(back) == len(curve) and list(back.columns) == [\"tenor_years\", \"discount_factor\", \"zero_rate\"]\n    print(out.head())\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-04-bootstrap-zero-curve\\20260915T113543"
+ }
+}

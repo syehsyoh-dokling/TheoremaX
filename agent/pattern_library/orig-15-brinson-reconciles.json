@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-15-brinson-reconciles",
+ "category": "portfolio",
+ "difficulty": "hard",
+ "tags": [
+  "attribution",
+  "brinson",
+  "reconciliation"
+ ],
+ "title": "Brinson-Fachler attribution that reconciles to the excess return",
+ "keywords": [
+  "sector",
+  "columns",
+  "wb_i",
+  "rb_i",
+  "task",
+  "brinson-fachler",
+  "attribution",
+  "csv",
+  "portfolio",
+  "excess",
+  "benchmark",
+  "allocation",
+  "selection",
+  "interaction",
+  "effects",
+  "wp_i",
+  "rp_i",
+  "environment",
+  "sectors",
+  "portfolio_weight",
+  "benchmark_weight",
+  "portfolio_return",
+  "benchmark_return",
+  "both",
+  "weight",
+  "sum",
+  "decompose",
+  "allocation_i",
+  "selection_i",
+  "interaction_i",
+  "total",
+  "total_effect",
+  "summed",
+  "across",
+  "every",
+  "three",
+  "equal",
+  "exactly",
+  "reconciliation",
+  "check"
+ ],
+ "deliverables": [
+  "attribution.csv",
+  "sectors.csv"
+ ],
+ "source": "\"\"\"Brinson-Fachler attribution that reconciles to the excess return exactly.\n\nRb = sum wb_i rb_i,  Rp = sum wp_i rp_i\nallocation_i  = (wp_i - wb_i) * (rb_i - Rb)\nselection_i   = wb_i * (rp_i - rb_i)\ninteraction_i = (wp_i - wb_i) * (rp_i - rb_i)\nSummed over sectors, allocation + selection + interaction = Rp - Rb, because\nsum (wp_i - wb_i) * Rb = 0 when both weight vectors sum to 1. Asserted.\n\"\"\"\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/sectors.csv\"\nOUT = \"/app/output/attribution.csv\"\n\n\ndef main() -> None:\n    s = pd.read_csv(INPUT)\n    wp, wb = s[\"portfolio_weight\"].to_numpy(float), s[\"benchmark_weight\"].to_numpy(float)\n    rp, rb = s[\"portfolio_return\"].to_numpy(float), s[\"benchmark_return\"].to_numpy(float)\n    Rb, Rp = float(wb @ rb), float(wp @ rp)\n\n    allocation = (wp - wb) * (rb - Rb)\n    selection = wb * (rp - rb)\n    interaction = (wp - wb) * (rp - rb)\n    total = allocation + selection + interaction\n    assert abs(total.sum() - (Rp - Rb)) < 1e-14, \"effects must reconcile to the excess return\"\n\n    out = pd.DataFrame({\"sector\": s[\"sector\"], \"allocation\": allocation, \"selection\": selection,\n                        \"interaction\": interaction, \"total_effect\": total})\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_csv(OUT, index=False, float_format=\"%.17g\")\n    back = pd.read_csv(OUT)\n    assert abs(back[\"total_effect\"].sum() - (Rp - Rb)) < 1e-12\n    print(f\"excess {Rp - Rb:.6f} reconciled across {len(out)} sectors\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-15-brinson-reconciles\\20260915T113733"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-18-cds-par-spread-balances",
+ "category": "credit",
+ "difficulty": "hard",
+ "tags": [
+  "cds",
+  "par-spread",
+  "leg-parity"
+ ],
+ "title": "CDS par spread, and the two legs it balances",
+ "keywords": [
+  "spread",
+  "exp",
+  "leg",
+  "task",
+  "reference_id",
+  "name",
+  "risky_pv01",
+  "present",
+  "sum",
+  "payment",
+  "protection_leg",
+  "par_spread",
+  "premium",
+  "equal",
+  "premium_leg_at_par",
+  "json",
+  "price",
+  "book",
+  "single-name",
+  "cds",
+  "environment",
+  "reference_names",
+  "parquet",
+  "columns",
+  "maturity_years",
+  "hazard_rate",
+  "recovery_rate",
+  "discount_rate",
+  "annual",
+  "payments",
+  "years",
+  "maturity",
+  "continuous",
+  "compounding",
+  "both",
+  "discounting",
+  "hazard",
+  "unit",
+  "paid",
+  "annually"
+ ],
+ "deliverables": [
+  "cds_pricing.json",
+  "reference_names.parquet"
+ ],
+ "source": "\"\"\"Single-name CDS: risky PV01, protection leg, par spread, premium leg at par.\n\nPayment dates t = 1..maturity; S(t) = exp(-h t); DF(t) = exp(-r t).\nrisky_pv01     = sum DF(t) S(t)\nprotection_leg = (1 - R) sum DF(t) (S(t-1) - S(t))\npar_spread     = protection_leg / risky_pv01\npremium_leg_at_par = par_spread * risky_pv01 (== protection_leg, asserted)\n\"\"\"\nimport json\nimport math\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/reference_names.parquet\"\nOUT = \"/app/output/cds_pricing.json\"\n\n\ndef main() -> None:\n    names = pd.read_parquet(INPUT)\n    rows = []\n    for n in names.itertuples(index=False):\n        mat = float(n.maturity_years)\n        k = int(round(mat))\n        assert abs(mat - k) < 1e-9 and k >= 1, \"annual payments need an integer maturity\"\n        t = np.arange(1, k + 1, dtype=float)\n        h, rec, r = float(n.hazard_rate), float(n.recovery_rate), float(n.discount_rate)\n        s = np.exp(-h * t)\n        s_prev = np.exp(-h * (t - 1.0))\n        df = np.exp(-r * t)\n        pv01 = float(np.sum(df * s))\n        prot = float((1.0 - rec) * np.sum(df * (s_prev - s)))\n        par = prot / pv01\n        prem = par * pv01\n        assert math.isclose(prem, prot, rel_tol=1e-12, abs_tol=1e-15)\n        rows.append({\"reference_id\": str(n.reference_id), \"risky_pv01\": pv01,\n                     \"protection_leg\": prot, \"par_spread\": par, \"premium_leg_at_par\": prem})\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    with open(OUT, \"w\", encoding=\"utf-8\") as fh:\n        json.dump({\"n_names\": len(rows), \"names\": rows}, fh, indent=2)\n    with open(OUT, encoding=\"utf-8\") as fh:\n        assert json.load(fh)[\"n_names\"] == len(names)\n    print(f\"{len(rows)} names priced\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-18-cds-par-spread-balances\\20260915T113800"
+ }
+}

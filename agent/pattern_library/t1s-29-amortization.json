@@ -1,0 +1,62 @@
+{
+ "task_id": "t1s-29-amortization",
+ "category": "fixed-income",
+ "difficulty": "expert",
+ "tags": [
+  "rounding",
+  "cashflows"
+ ],
+ "title": "360-month amortization schedule, exact to the cent",
+ "keywords": [
+  "balance",
+  "interest",
+  "principal",
+  "payment",
+  "monthly",
+  "round",
+  "month",
+  "schedule",
+  "rate",
+  "every",
+  "cents",
+  "deliverables",
+  "task",
+  "mortgage",
+  "amortization",
+  "parameters",
+  "annual",
+  "nominal",
+  "compounded",
+  "payments",
+  "rounding",
+  "normative",
+  "figure",
+  "money",
+  "constant",
+  "months",
+  "final",
+  "exactly",
+  "csv",
+  "columns",
+  "rows",
+  "exact",
+  "cent",
+  "compare",
+  "integer",
+  "tolerance",
+  "constraints",
+  "restricted",
+  "network",
+  "you"
+ ],
+ "deliverables": [
+  "reward.json",
+  "schedule.csv"
+ ],
+ "source": "import os\n# Rules applied literally as written, with every figure kept in cents.\nP0, r, n = 350000.00, 0.048 / 12, 360\npayment = round(P0 * r / (1 - (1 + r) ** -n), 2)\nbalance = P0\nrows = []\nfor month in range(1, n + 1):\n    interest = round(balance * r, 2)\n    if month < n:\n        pay = payment\n    else:\n        pay = round(balance + interest, 2)\n    principal = round(pay - interest, 2)\n    balance = round(balance - principal, 2)\n    rows.append((month, pay, interest, principal, balance))\nassert rows[-1][4] == 0.0\nos.makedirs(\"/app/output\", exist_ok=True)\nwith open(\"/app/output/schedule.csv\", \"w\", encoding=\"utf-8\", newline=\"\") as fh:\n    fh.write(\"month,payment,interest,principal,balance\\n\")\n    for m, pay, i, pr, b in rows:\n        fh.write(f\"{m},{pay:.2f},{i:.2f},{pr:.2f},{b:.2f}\\n\")\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-29-amortization\\20260915T130519"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-06-forwards-compound-back",
+ "category": "fixed-income",
+ "difficulty": "hard",
+ "tags": [
+  "forward-rates",
+  "no-arbitrage",
+  "json-input"
+ ],
+ "title": "Forward rates that compound back to the spot curve",
+ "keywords": [
+  "json",
+  "forward",
+  "rate",
+  "task",
+  "investing",
+  "tenor",
+  "spot",
+  "forwards",
+  "implied",
+  "one-period",
+  "rates",
+  "environment",
+  "spot_curve",
+  "array",
+  "records",
+  "tenor_years",
+  "zero_rate",
+  "annually",
+  "compounded",
+  "decimal",
+  "adjacent",
+  "pair",
+  "tenors",
+  "applies",
+  "between",
+  "them",
+  "defining",
+  "relation",
+  "later",
+  "equal",
+  "earlier",
+  "rolling",
+  "forward_rates",
+  "n_forwards",
+  "start_year",
+  "end_year",
+  "forward_rate",
+  "chained",
+  "back",
+  "reproduce"
+ ],
+ "deliverables": [
+  "forward_rates.json",
+  "spot_curve.json"
+ ],
+ "source": "\"\"\"One-period forward rates between adjacent tenors of an annual zero curve.\n\n(1 + z2)^t2 = (1 + z1)^t1 * (1 + f)^(t2 - t1)\n=> f = ((1 + z2)^t2 / (1 + z1)^t1) ** (1 / (t2 - t1)) - 1\n\nNo rounding anywhere: the forwards are chained back across the whole curve,\nso a per-period rounding error compounds. The program re-chains them itself\nand asserts every spot rate is reproduced before writing.\n\"\"\"\nimport json\nimport os\n\nINPUT = \"/input/environment/data/spot_curve.json\"\nOUT = \"/app/output/forward_rates.json\"\n\n\ndef as_year(x: float):\n    return int(round(x)) if abs(x - round(x)) < 1e-12 else float(x)\n\n\ndef main() -> None:\n    with open(INPUT, encoding=\"utf-8\") as fh:\n        raw = json.load(fh)\n    records = raw if isinstance(raw, list) else raw.get(\"curve\") or raw.get(\"records\") or next(\n        v for v in raw.values() if isinstance(v, list))\n    curve = sorted(((float(r[\"tenor_years\"]), float(r[\"zero_rate\"])) for r in records), key=lambda p: p[0])\n\n    forwards = []\n    for (t1, z1), (t2, z2) in zip(curve[:-1], curve[1:]):\n        growth = (1.0 + z2) ** t2 / (1.0 + z1) ** t1\n        f = growth ** (1.0 / (t2 - t1)) - 1.0\n        forwards.append({\"start_year\": as_year(t1), \"end_year\": as_year(t2), \"forward_rate\": f})\n\n    # Chain back: from the first spot, compounding the forwards must reproduce every later spot.\n    t0, z0 = curve[0]\n    acc = (1.0 + z0) ** t0\n    for fwd, (t2, z2) in zip(forwards, curve[1:]):\n        acc *= (1.0 + fwd[\"forward_rate\"]) ** (float(fwd[\"end_year\"]) - float(fwd[\"start_year\"]))\n        assert abs(acc ** (1.0 / t2) - 1.0 - z2) < 1e-12, f\"chain breaks at tenor {t2}\"\n\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    with open(OUT, \"w\", encoding=\"utf-8\") as fh:\n        json.dump({\"n_forwards\": len(forwards), \"forwards\": forwards}, fh, indent=2)\n    with open(OUT, encoding=\"utf-8\") as fh:\n        assert json.load(fh)[\"n_forwards\"] == len(curve) - 1\n    print(f\"{len(forwards)} forwards\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-06-forwards-compound-back\\20260915T112821"
+ }
+}

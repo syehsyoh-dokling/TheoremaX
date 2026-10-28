@@ -1,0 +1,62 @@
+{
+ "task_id": "t1s-12-sequential-chaos",
+ "category": "numerical-methods",
+ "difficulty": "expert",
+ "tags": [
+  "performance",
+  "determinism"
+ ],
+ "title": "Logistic-map checkpoint: 200 million strictly sequential steps",
+ "keywords": [
+  "task",
+  "checkpoint",
+  "map",
+  "float64",
+  "after",
+  "iteration",
+  "json",
+  "trajectory",
+  "exact",
+  "python",
+  "deterministic",
+  "logistic-map",
+  "iterate",
+  "logistic",
+  "ieee",
+  "starting",
+  "evaluated",
+  "exactly",
+  "form",
+  "iterations",
+  "record",
+  "final",
+  "results",
+  "keys",
+  "x_checkpoint",
+  "x_final",
+  "warning",
+  "chaotic",
+  "algebraic",
+  "rewrite",
+  "update",
+  "example",
+  "float32",
+  "excursion",
+  "fused",
+  "multiply-add",
+  "changes",
+  "completely",
+  "grader",
+  "holds"
+ ],
+ "deliverables": [
+  "results.json",
+  "reward.json"
+ ],
+ "source": "import json, os\n# CPython floats are IEEE float64 and the interpreter never fuses multiply-add,\n# so the update evaluated exactly as written is bit-exact. No numpy, no rewrite.\na = 3.9\nx = 0.5\nfor _ in range(1_000_000):\n    x = a * x * (1.0 - x)\ncheckpoint = x\nfor _ in range(199_000_000):\n    x = a * x * (1.0 - x)\nos.makedirs(\"/app/output\", exist_ok=True)\njson.dump({\"x_checkpoint\": checkpoint, \"x_final\": x}, open(\"/app/output/results.json\", \"w\"))\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-12-sequential-chaos\\20260915T130112"
+ }
+}

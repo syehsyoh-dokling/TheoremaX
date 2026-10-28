@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-15-annualisation-identities",
+ "category": "backtesting",
+ "difficulty": "hard",
+ "tags": [
+  "sharpe",
+  "annualisation",
+  "identity"
+ ],
+ "title": "Sharpe ratio and the annualisation identities around it",
+ "keywords": [
+  "daily",
+  "annualised",
+  "sharpe",
+  "ratio",
+  "excess",
+  "standard",
+  "deviation",
+  "task",
+  "mean",
+  "json",
+  "environment",
+  "parquet",
+  "columns",
+  "date",
+  "strategy_return",
+  "risk_free_daily",
+  "simple",
+  "figures",
+  "work",
+  "defined",
+  "strategy",
+  "minus",
+  "risk-free",
+  "rate",
+  "sample",
+  "denominator",
+  "n-1",
+  "trading",
+  "days",
+  "year",
+  "report",
+  "volatility",
+  "annualisation",
+  "conventions",
+  "same",
+  "every",
+  "quantity",
+  "scales",
+  "linearly",
+  "time"
+ ],
+ "deliverables": [
+  "daily.parquet",
+  "performance.json"
+ ],
+ "source": "\"\"\"Daily and annualised Sharpe with the two different scaling laws.\n\nexcess = strategy - risk_free (daily, simple)\nmean and std (ddof=1) of the excess; sharpe_daily = mean / std\nannualised: mean * 252 (linear), std * sqrt(252), sharpe * sqrt(252)\nThe identity sharpe_annualised == annualised_excess_return / annualised_volatility\nis asserted, because it is exactly what separates the two conventions.\n\"\"\"\nimport json\nimport math\nimport os\n\nimport pandas as pd\n\nINPUT = \"/input/environment/data/daily.parquet\"\nOUT = \"/app/output/performance.json\"\nDAYS = 252\n\n\ndef main() -> None:\n    df = pd.read_parquet(INPUT)\n    excess = (df[\"strategy_return\"].astype(float) - df[\"risk_free_daily\"].astype(float)).dropna()\n    mean = float(excess.mean())\n    std = float(excess.std(ddof=1))\n    perf = {\n        \"n_days\": int(len(excess)),\n        \"mean_daily_excess\": mean,\n        \"std_daily_excess\": std,\n        \"sharpe_daily\": mean / std,\n        \"sharpe_annualised\": mean / std * math.sqrt(DAYS),\n        \"annualised_volatility\": std * math.sqrt(DAYS),\n        \"annualised_excess_return\": mean * DAYS,\n    }\n    assert abs(perf[\"sharpe_annualised\"]\n               - perf[\"annualised_excess_return\"] / perf[\"annualised_volatility\"]) < 1e-12\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    with open(OUT, \"w\", encoding=\"utf-8\") as fh:\n        json.dump(perf, fh, indent=2)\n    with open(OUT, encoding=\"utf-8\") as fh:\n        assert set(json.load(fh)) == set(perf)\n    print(perf)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-15-annualisation-identities\\20260915T113050"
+ }
+}

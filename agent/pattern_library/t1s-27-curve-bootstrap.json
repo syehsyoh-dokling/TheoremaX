@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-27-curve-bootstrap",
+ "category": "fixed-income",
+ "difficulty": "expert",
+ "tags": [
+  "numerics",
+  "bootstrap"
+ ],
+ "title": "Discount curve bootstrap repricing par within 1e-8",
+ "keywords": [
+  "par",
+  "bootstrap",
+  "par_n",
+  "swap",
+  "rates",
+  "csv",
+  "columns",
+  "tenor_years",
+  "every",
+  "sum_",
+  "df_i",
+  "df_n",
+  "deliverables",
+  "task",
+  "zero-curve",
+  "environment",
+  "par_rates",
+  "integers",
+  "par_rate",
+  "annual-pay",
+  "conventions",
+  "normative",
+  "fixed",
+  "leg",
+  "pays",
+  "annually",
+  "accrual",
+  "fraction",
+  "exactly",
+  "notional",
+  "exchange",
+  "maturity",
+  "means",
+  "ascending",
+  "n-1",
+  "discount",
+  "rows",
+  "tenors",
+  "order",
+  "grading"
+ ],
+ "deliverables": [
+  "discount.csv",
+  "par_rates.csv",
+  "reward.json"
+ ],
+ "source": "import os\nimport pandas as pd\np = pd.read_csv(\"/input/environment/data/par_rates.csv\").sort_values(\"tenor_years\")\ndfs, running = [], 0.0\nfor c in p[\"par_rate\"].astype(float):\n    df = (1.0 - c * running) / (1.0 + c)\n    dfs.append(df)\n    running += df\nos.makedirs(\"/app/output\", exist_ok=True)\npd.DataFrame({\"tenor_years\": p[\"tenor_years\"].astype(int), \"df\": dfs}).to_csv(\n    \"/app/output/discount.csv\", index=False, float_format=\"%.17g\")\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-27-curve-bootstrap\\20260915T130505"
+ }
+}

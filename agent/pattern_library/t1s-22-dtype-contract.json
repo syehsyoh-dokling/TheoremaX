@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-22-dtype-contract",
+ "category": "cross-domain",
+ "difficulty": "hard",
+ "tags": [
+  "format",
+  "dtypes"
+ ],
+ "title": "Sorted panel with exact parquet dtypes",
+ "keywords": [
+  "date",
+  "asset",
+  "rows",
+  "task",
+  "panel",
+  "score",
+  "strings",
+  "normalised",
+  "environment",
+  "raw",
+  "csv",
+  "columns",
+  "string",
+  "arbitrary",
+  "order",
+  "parquet",
+  "same",
+  "parsed",
+  "timestamps",
+  "timezone-naive",
+  "datetime64",
+  "dtype",
+  "resolution",
+  "both",
+  "accepted",
+  "objects",
+  "kept",
+  "plain",
+  "categorical",
+  "float64",
+  "sorted",
+  "ascending",
+  "index",
+  "dropped",
+  "constraints",
+  "restricted",
+  "network",
+  "you",
+  "need",
+  "language"
+ ],
+ "deliverables": [
+  "panel.parquet",
+  "raw.csv",
+  "reward.json"
+ ],
+ "source": "import os\nimport pandas as pd\nraw = pd.read_csv(\"/input/environment/data/raw.csv\", dtype={\"asset\": str})\npanel = pd.DataFrame({\n    \"date\": pd.to_datetime(raw[\"date\"]).astype(\"datetime64[ns]\"),\n    \"asset\": raw[\"asset\"].astype(object),\n    \"score\": raw[\"score\"].astype(\"float64\"),\n}).sort_values([\"date\", \"asset\"], kind=\"mergesort\").reset_index(drop=True)\nos.makedirs(\"/app/output\", exist_ok=True)\npanel.to_parquet(\"/app/output/panel.parquet\", index=False)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-22-dtype-contract\\20260915T130418"
+ }
+}

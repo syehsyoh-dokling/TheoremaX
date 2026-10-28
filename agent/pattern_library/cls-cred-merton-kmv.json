@@ -1,0 +1,62 @@
+{
+ "task_id": "cls-cred-merton-kmv",
+ "category": "credit",
+ "difficulty": "hard",
+ "tags": [
+  "merton",
+  "structural-model",
+  "distance-to-default",
+  "nonlinear-solve"
+ ],
+ "title": "Merton structural model: asset value, asset volatility and default risk",
+ "keywords": [
+  "sigma_v",
+  "task",
+  "equity",
+  "merton",
+  "csv",
+  "firm_id",
+  "sigma_e",
+  "firm",
+  "sqrt",
+  "distance_to_default",
+  "default_probability",
+  "credit_spread",
+  "infer",
+  "asset",
+  "volatility",
+  "environment",
+  "firms",
+  "equity_value",
+  "equity_vol",
+  "debt_face",
+  "zero-coupon",
+  "debt",
+  "due",
+  "maturity_years",
+  "rate",
+  "continuously",
+  "compounded",
+  "model",
+  "call",
+  "assets",
+  "strike",
+  "exp",
+  "solve",
+  "jointly",
+  "report",
+  "asset_value",
+  "asset_vol",
+  "order"
+ ],
+ "deliverables": [
+  "firms.csv",
+  "merton.csv"
+ ],
+ "source": "\"\"\"Merton (1974): recover asset value and volatility from equity, then default risk.\n\nTwo unknowns (V, sigma_V), two equations: the equity pricing identity and the\nvolatility link sigma_E E = N(d1) sigma_V V (Ito on E = C(V)). Solving only the\nfirst with an assumed sigma_V is the common shortcut, and it is wrong.\n\nA good starting point makes the joint solve robust: V0 = E + D exp(-rT) (the\nbalance sheet) and sigma_V0 = sigma_E E / V0 (the leverage-scaled equity vol).\nThe solve works in (ln V, ln sigma_V) so both stay positive, and the program\nrefuses to write a firm whose residuals are not tiny relative to its inputs.\n\"\"\"\nimport math\nimport os\n\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import least_squares\nfrom scipy.stats import norm\n\nINPUT = \"/input/environment/data/firms.csv\"\nOUT = \"/app/output/merton.csv\"\n\n\ndef d1d2(V, sv, D, r, T):\n    d1 = (math.log(V / D) + (r + 0.5 * sv * sv) * T) / (sv * math.sqrt(T))\n    return d1, d1 - sv * math.sqrt(T)\n\n\ndef solve(E, sE, D, r, T):\n    def residual(z):\n        V, sv = math.exp(z[0]), math.exp(z[1])\n        d1, d2 = d1d2(V, sv, D, r, T)\n        return [(V * norm.cdf(d1) - D * math.exp(-r * T) * norm.cdf(d2) - E) / E,\n                (norm.cdf(d1) * sv * V - sE * E) / (sE * E)]\n\n    V0 = E + D * math.exp(-r * T)\n    z0 = [math.log(V0), math.log(max(sE * E / V0, 1e-4))]\n    res = least_squares(residual, z0, xtol=1e-15, ftol=1e-15, gtol=1e-15, max_nfev=2000)\n    V, sv = math.exp(res.x[0]), math.exp(res.x[1])\n    assert max(abs(x) for x in residual(res.x)) < 1e-9, \"Merton system did not converge\"\n    return V, sv\n\n\ndef main() -> None:\n    firms = pd.read_csv(INPUT)\n    rows = []\n    for f in firms.itertuples(index=False):\n        E, sE, D, T, r = float(f.equity_value), float(f.equity_vol), float(f.debt_face), float(f.maturity_years), float(f.rate)\n        V, sv = solve(E, sE, D, r, T)\n        _, d2 = d1d2(V, sv, D, r, T)\n        rows.append({\"firm_id\": f.firm_id, \"asset_value\": V, \"asset_vol\": sv,\n                     \"distance_to_default\": d2, \"default_probability\": float(norm.cdf(-d2)),\n                     \"credit_spread\": -math.log((V - E) / D) / T - r})\n    out = pd.DataFrame(rows)\n    assert (out[\"asset_value\"] > firms[\"equity_value\"]).all()\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_csv(OUT, index=False, float_format=\"%.17g\")\n    print(out.describe().T[[\"min\", \"max\"]])\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "classroom",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\cls-cred-merton-kmv\\20260915T183656"
+ }
+}

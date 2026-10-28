@@ -1,0 +1,62 @@
+{
+ "task_id": "t1s-21-strict-csv",
+ "category": "portfolio-construction",
+ "difficulty": "hard",
+ "tags": [
+  "format"
+ ],
+ "title": "Weights CSV with a byte-exact header and 6-decimal rounding",
+ "keywords": [
+  "weights",
+  "csv",
+  "task",
+  "strict",
+  "asset",
+  "mktval",
+  "sum",
+  "rounded",
+  "exactly",
+  "decimal",
+  "places",
+  "row",
+  "weight",
+  "market-value",
+  "environment",
+  "positions",
+  "columns",
+  "weight_i",
+  "mktval_i",
+  "one",
+  "order",
+  "format",
+  "requirements",
+  "first",
+  "line",
+  "index",
+  "column",
+  "bom",
+  "printed",
+  "most",
+  "within",
+  "e-6",
+  "constraints",
+  "restricted",
+  "network",
+  "you",
+  "need",
+  "language",
+  "python",
+  "numpy"
+ ],
+ "deliverables": [
+  "positions.csv",
+  "reward.json",
+  "weights.csv"
+ ],
+ "source": "import os\nimport numpy as np\nimport pandas as pd\npos = pd.read_csv(\"/input/environment/data/positions.csv\")\nw = pos[\"mktval\"].to_numpy(float) / pos[\"mktval\"].sum()\nmicro = np.round(w * 1e6).astype(np.int64)\nif abs(micro.sum() - 1_000_000) > 5:\n    # Largest-remainder correction only if plain rounding breaks the 5e-6 sum rule.\n    floor = np.floor(w * 1e6).astype(np.int64)\n    short = 1_000_000 - floor.sum()\n    order = np.argsort(-(w * 1e6 - floor), kind=\"stable\")\n    floor[order[:short]] += 1\n    micro = floor\nos.makedirs(\"/app/output\", exist_ok=True)\nwith open(\"/app/output/weights.csv\", \"w\", encoding=\"utf-8\", newline=\"\") as fh:\n    fh.write(\"asset,weight\\n\")\n    for a, m in zip(pos[\"asset\"], micro):\n        fh.write(f\"{a},{m / 1e6:.6f}\\n\")\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-21-strict-csv\\20260915T130409"
+ }
+}

@@ -1,0 +1,3120 @@
+[
+ {
+  "task_id": "cls-bt-deflated-sharpe",
+  "category": "backtesting",
+  "tags": [
+   "deflated-sharpe",
+   "probabilistic-sharpe",
+   "multiple-testing",
+   "selection-bias"
+  ],
+  "deliverables": [
+   "deflated_sharpe.json",
+   "trials.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-bt-risk-parity-vol-target",
+  "category": "backtesting",
+  "tags": [
+   "risk-parity",
+   "equal-risk-contribution",
+   "volatility-target",
+   "allocation"
+  ],
+  "deliverables": [
+   "allocation.csv",
+   "allocation.json",
+   "config.json",
+   "strategy_returns.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-bt-self-financing-ledger",
+  "category": "backtesting",
+  "tags": [
+   "self-financing",
+   "rebalancing",
+   "transaction-costs",
+   "ledger"
+  ],
+  "deliverables": [
+   "config.json",
+   "ledger.csv",
+   "ledger_summary.json",
+   "prices.csv",
+   "target_weights.csv",
+   "trades.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-bt-walk-forward",
+  "category": "backtesting",
+  "tags": [
+   "walk-forward",
+   "out-of-sample",
+   "parameter-selection",
+   "mean-reversion"
+  ],
+  "deliverables": [
+   "folds.csv",
+   "oos_returns.csv",
+   "prices.csv",
+   "walk_forward_summary.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-cred-cds-hazard-bootstrap",
+  "category": "credit",
+  "tags": [
+   "cds",
+   "hazard-rate",
+   "bootstrap",
+   "survival-curve"
+  ],
+  "deliverables": [
+   "cds_quotes.csv",
+   "hazard_curve.csv",
+   "params.json",
+   "repricing.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-cred-lhp-tranche-el",
+  "category": "credit",
+  "tags": [
+   "cdo",
+   "tranche",
+   "gaussian-copula",
+   "lhp",
+   "numerical-integration"
+  ],
+  "deliverables": [
+   "pool.json",
+   "tranche_expected_loss.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-cred-merton-kmv",
+  "category": "credit",
+  "tags": [
+   "merton",
+   "structural-model",
+   "distance-to-default",
+   "nonlinear-solve"
+  ],
+  "deliverables": [
+   "firms.csv",
+   "merton.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-cred-swap-cva",
+  "category": "credit",
+  "tags": [
+   "cva",
+   "expected-exposure",
+   "bachelier",
+   "swaption"
+  ],
+  "deliverables": [
+   "cva.json",
+   "exposure_profile.csv",
+   "swap.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-deriv-barrier-mc-bridge",
+  "category": "derivatives-pricing",
+  "tags": [
+   "barrier-option",
+   "monte-carlo",
+   "brownian-bridge",
+   "variance-reduction",
+   "reiner-rubinstein"
+  ],
+  "deliverables": [
+   "barrier_options.csv",
+   "barrier_prices.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-deriv-heston-calibration",
+  "category": "derivatives-pricing",
+  "tags": [
+   "heston",
+   "stochastic-volatility",
+   "calibration",
+   "characteristic-function"
+  ],
+  "deliverables": [
+   "call_surface.csv",
+   "heston_fit.csv",
+   "heston_params.json",
+   "market.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fac-alpha-decay",
+  "category": "factor-research",
+  "tags": [
+   "alpha-decay",
+   "information-coefficient",
+   "half-life",
+   "horizon"
+  ],
+  "deliverables": [
+   "decay_fit.json",
+   "ic_decay.csv",
+   "returns.parquet",
+   "signal.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fac-fama-macbeth",
+  "category": "factor-research",
+  "tags": [
+   "fama-macbeth",
+   "cross-sectional-regression",
+   "newey-west",
+   "risk-premia"
+  ],
+  "deliverables": [
+   "lambdas.csv",
+   "panel.parquet",
+   "premia.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fac-ic-ir-combination",
+  "category": "factor-research",
+  "tags": [
+   "information-coefficient",
+   "information-ratio",
+   "signal-combination",
+   "spearman"
+  ],
+  "deliverables": [
+   "combination.json",
+   "combined_signal.parquet",
+   "signal_ic.csv",
+   "signals.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fi-futures-convexity-adjustment",
+  "category": "fixed-income",
+  "tags": [
+   "convexity-adjustment",
+   "rate-futures",
+   "ho-lee",
+   "zero-curve"
+  ],
+  "deliverables": [
+   "futures.csv",
+   "futures_curve.csv",
+   "params.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fi-mbs-psa-cashflows",
+  "category": "fixed-income",
+  "tags": [
+   "mbs",
+   "psa",
+   "prepayment",
+   "weighted-average-life",
+   "pass-through"
+  ],
+  "deliverables": [
+   "mbs_cashflows.csv",
+   "mbs_summary.json",
+   "pool.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fi-nelson-siegel-svensson",
+  "category": "fixed-income",
+  "tags": [
+   "nelson-siegel-svensson",
+   "curve-fitting",
+   "nonlinear-least-squares",
+   "forward-curve"
+  ],
+  "deliverables": [
+   "nss_curve.csv",
+   "nss_fit.json",
+   "zero_yields.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fx-garman-kohlhagen",
+  "category": "fx",
+  "tags": [
+   "garman-kohlhagen",
+   "fx-options",
+   "premium-adjusted-delta",
+   "put-call-parity"
+  ],
+  "deliverables": [
+   "fx_options.csv",
+   "gk_prices.csv",
+   "parity.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fx-rr-bf-smile",
+  "category": "fx",
+  "tags": [
+   "fx-smile",
+   "risk-reversal",
+   "butterfly",
+   "delta-conventions",
+   "strikes"
+  ],
+  "deliverables": [
+   "market.json",
+   "smile.csv",
+   "vol_quotes.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-fx-triangular-arbitrage",
+  "category": "fx",
+  "tags": [
+   "triangular-arbitrage",
+   "bid-ask",
+   "fx",
+   "graph-cycles"
+  ],
+  "deliverables": [
+   "arbitrage.csv",
+   "arbitrage_summary.json",
+   "quotes.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-ms-almgren-chriss",
+  "category": "microstructure",
+  "tags": [
+   "almgren-chriss",
+   "optimal-execution",
+   "market-impact"
+  ],
+  "deliverables": [
+   "ac_summary.json",
+   "params.json",
+   "schedule.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-ms-roll-spread",
+  "category": "microstructure",
+  "tags": [
+   "roll-model",
+   "bid-ask-bounce",
+   "serial-covariance"
+  ],
+  "deliverables": [
+   "roll_spread.csv",
+   "roll_summary.json",
+   "trades.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-ms-sqrt-impact",
+  "category": "microstructure",
+  "tags": [
+   "market-impact",
+   "square-root-law",
+   "log-log-ols"
+  ],
+  "deliverables": [
+   "impact_fit.json",
+   "metaorders.csv",
+   "predictions.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-ms-vpin-bvc",
+  "category": "microstructure",
+  "tags": [
+   "vpin",
+   "bulk-volume-classification",
+   "order-flow-toxicity"
+  ],
+  "deliverables": [
+   "bars.parquet",
+   "buckets.csv",
+   "vpin.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-nlp-entity-resolution",
+  "category": "nlp-on-finance",
+  "tags": [
+   "entity-resolution",
+   "normalisation",
+   "tickers"
+  ],
+  "deliverables": [
+   "entities.csv",
+   "mentions.csv",
+   "resolution_summary.json",
+   "resolved.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-nlp-filing-sections",
+  "category": "nlp-on-finance",
+  "tags": [
+   "10-k",
+   "section-extraction",
+   "classification"
+  ],
+  "deliverables": [
+   "category_counts.json",
+   "risk_factors.csv",
+   "taxonomy.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-nlp-lexicon-sentiment",
+  "category": "nlp-on-finance",
+  "tags": [
+   "sentiment",
+   "lexicon",
+   "negation",
+   "earnings-calls"
+  ],
+  "deliverables": [
+   "lexicon.json",
+   "segment_scores.csv",
+   "segments.json",
+   "speaker_gap.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-rm-frtb-girr-delta",
+  "category": "risk-management",
+  "tags": [
+   "frtb",
+   "sbm",
+   "girr",
+   "correlation-scenarios",
+   "capital"
+  ],
+  "deliverables": [
+   "girr_capital.json",
+   "girr_parameters.json",
+   "girr_sensitivities.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-rm-mc-factor-var",
+  "category": "risk-management",
+  "tags": [
+   "monte-carlo",
+   "factor-model",
+   "var",
+   "expected-shortfall",
+   "student-t"
+  ],
+  "deliverables": [
+   "config.json",
+   "factor_covariance.csv",
+   "positions.csv",
+   "var_report.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-rm-stress-scenarios",
+  "category": "risk-management",
+  "tags": [
+   "stress-testing",
+   "scenario-analysis",
+   "sensitivities"
+  ],
+  "deliverables": [
+   "positions.csv",
+   "scenario_pnl.csv",
+   "scenarios.csv",
+   "worst_case_contributors.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-rm-var-backtest",
+  "category": "risk-management",
+  "tags": [
+   "var-backtesting",
+   "kupiec",
+   "christoffersen",
+   "traffic-light"
+  ],
+  "deliverables": [
+   "var_backtest.csv",
+   "var_backtest.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-xd-sentiment-neutral-longshort",
+  "category": "cross-domain",
+  "tags": [
+   "nlp-signal",
+   "long-short",
+   "dollar-neutral",
+   "beta-neutral",
+   "projection"
+  ],
+  "deliverables": [
+   "book_summary.json",
+   "daily.csv",
+   "panel.parquet",
+   "weights.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-xd-swaption-keyrate-hedge",
+  "category": "cross-domain",
+  "tags": [
+   "swaption",
+   "bachelier",
+   "delta",
+   "key-rate",
+   "hedging",
+   "linear-system"
+  ],
+  "deliverables": [
+   "hedge.json",
+   "hedge_instruments.csv",
+   "market.json",
+   "swaption_risk.csv",
+   "swaptions.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "cls-xd-usd-cds-in-eur",
+  "category": "cross-domain",
+  "tags": [
+   "cds",
+   "fx-forwards",
+   "cross-currency-basis",
+   "cs01"
+  ],
+  "deliverables": [
+   "book_eur.json",
+   "cds_book.csv",
+   "cds_eur_valuation.csv",
+   "market.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-02-american-early-exercise",
+  "category": "derivatives-pricing",
+  "tags": [
+   "american",
+   "binomial",
+   "early-exercise"
+  ],
+  "deliverables": [
+   "contracts.parquet",
+   "put_prices.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-03-two-files-must-agree",
+  "category": "derivatives-pricing",
+  "tags": [
+   "put-call-parity",
+   "cross-file",
+   "multi-deliverable"
+  ],
+  "deliverables": [
+   "book.parquet",
+   "prices.parquet",
+   "summary.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-05-duration-convexity-predicts",
+  "category": "fixed-income",
+  "tags": [
+   "duration",
+   "convexity",
+   "taylor"
+  ],
+  "deliverables": [
+   "analytics.parquet",
+   "bonds.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-06-forwards-compound-back",
+  "category": "fixed-income",
+  "tags": [
+   "forward-rates",
+   "no-arbitrage",
+   "json-input"
+  ],
+  "deliverables": [
+   "forward_rates.json",
+   "spot_curve.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-07-var-cvar-orderings",
+  "category": "risk-management",
+  "tags": [
+   "var",
+   "cvar",
+   "fat-tails",
+   "monotonicity"
+  ],
+  "deliverables": [
+   "returns.parquet",
+   "risk_measures.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-08-covariance-psd-and-consistent",
+  "category": "risk-management",
+  "tags": [
+   "covariance",
+   "correlation",
+   "psd",
+   "multi-deliverable"
+  ],
+  "deliverables": [
+   "asset_returns.parquet",
+   "correlation.csv",
+   "covariance.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-09-drawdown-series-and-summary",
+  "category": "risk-management",
+  "tags": [
+   "drawdown",
+   "running-maximum",
+   "cross-file"
+  ],
+  "deliverables": [
+   "drawdown.csv",
+   "drawdown_summary.json",
+   "nav_history.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-10-restricted-fund-runway",
+  "category": "ngo-finance",
+  "tags": [
+   "ngo",
+   "restricted-funds",
+   "liquidity"
+  ],
+  "deliverables": [
+   "fund_positions.csv",
+   "spendability.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-13-no-lookahead-moving-average",
+  "category": "backtesting",
+  "tags": [
+   "lookahead",
+   "signal-lag",
+   "cross-file"
+  ],
+  "deliverables": [
+   "backtest.csv",
+   "backtest_summary.json",
+   "prices.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-14-net-of-turnover-cost",
+  "category": "backtesting",
+  "tags": [
+   "turnover",
+   "transaction-cost",
+   "json-config"
+  ],
+  "deliverables": [
+   "asset_returns.parquet",
+   "cost_model.json",
+   "net_performance.parquet",
+   "target_weights.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "hard-15-annualisation-identities",
+  "category": "backtesting",
+  "tags": [
+   "sharpe",
+   "annualisation",
+   "identity"
+  ],
+  "deliverables": [
+   "daily.parquet",
+   "performance.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-01-implied-vol-surface",
+  "category": "derivatives-pricing",
+  "tags": [
+   "implied-vol",
+   "root-finding",
+   "nested-json"
+  ],
+  "deliverables": [
+   "implied_surface.json",
+   "quotes.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-04-bootstrap-zero-curve",
+  "category": "fixed-income",
+  "tags": [
+   "bootstrap",
+   "discount-factors",
+   "no-arbitrage"
+  ],
+  "deliverables": [
+   "par_curve.csv",
+   "zero_curve.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-13-minimum-variance-portfolio",
+  "category": "portfolio",
+  "tags": [
+   "mean-variance",
+   "optimisation",
+   "cross-file"
+  ],
+  "deliverables": [
+   "portfolio_stats.json",
+   "returns.parquet",
+   "weights.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-14-risk-contributions-close",
+  "category": "portfolio",
+  "tags": [
+   "risk-decomposition",
+   "euler",
+   "additivity"
+  ],
+  "deliverables": [
+   "holdings.csv",
+   "returns.parquet",
+   "risk_contributions.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-15-brinson-reconciles",
+  "category": "portfolio",
+  "tags": [
+   "attribution",
+   "brinson",
+   "reconciliation"
+  ],
+  "deliverables": [
+   "attribution.csv",
+   "sectors.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-16-survival-curve-from-hazards",
+  "category": "credit",
+  "tags": [
+   "hazard",
+   "survival",
+   "monotonicity"
+  ],
+  "deliverables": [
+   "hazard_curve.csv",
+   "survival_curve.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-17-transition-matrix-and-square",
+  "category": "credit",
+  "tags": [
+   "markov",
+   "transition-matrix",
+   "stochastic",
+   "multi-deliverable"
+  ],
+  "deliverables": [
+   "transition_1y.csv",
+   "transition_2y.csv",
+   "transition_counts.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-18-cds-par-spread-balances",
+  "category": "credit",
+  "tags": [
+   "cds",
+   "par-spread",
+   "leg-parity"
+  ],
+  "deliverables": [
+   "cds_pricing.json",
+   "reference_names.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-19-triangular-consistency",
+  "category": "fx",
+  "tags": [
+   "triangular-arbitrage",
+   "cross-rates",
+   "matrix-completion"
+  ],
+  "deliverables": [
+   "full_matrix.parquet",
+   "quoted_pairs.csv",
+   "universe.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-20-covered-interest-parity",
+  "category": "fx",
+  "tags": [
+   "cip",
+   "forwards",
+   "compounding"
+  ],
+  "deliverables": [
+   "forwards.csv",
+   "fx_inputs.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-21-carry-and-spot-compound",
+  "category": "fx",
+  "tags": [
+   "carry",
+   "compounding",
+   "cross-file"
+  ],
+  "deliverables": [
+   "carry_decomposition.parquet",
+   "carry_summary.json",
+   "daily_fx.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-28-three-stage-pipeline",
+  "category": "cross-domain",
+  "tags": [
+   "pipeline",
+   "bootstrap",
+   "duration",
+   "multi-deliverable"
+  ],
+  "deliverables": [
+   "book.csv",
+   "par_curve.csv",
+   "stage1_curve.csv",
+   "stage2_prices.parquet",
+   "stage3_portfolio.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-29-tolerance-stated-in-prose",
+  "category": "cross-domain",
+  "tags": [
+   "monte-carlo",
+   "correlation",
+   "stated-tolerance",
+   "prose-deliverable"
+  ],
+  "deliverables": [
+   "basket_values.csv",
+   "baskets.parquet"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "orig-30-component-var-two-identities",
+  "category": "cross-domain",
+  "tags": [
+   "component-var",
+   "euler",
+   "diversification",
+   "multi-deliverable"
+  ],
+  "deliverables": [
+   "component_var.parquet",
+   "positions.csv",
+   "returns.parquet",
+   "var_config.json",
+   "var_summary.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1-asian-option-levy-curran",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "asian-option",
+   "levy",
+   "curran",
+   "moment-matching",
+   "option-pricing",
+   "calibration"
+  ],
+  "deliverables": [
+   "asian_prices.csv",
+   "calibration.json",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-barrier-garch-var",
+  "category": "cross-domain",
+  "tags": [
+   "barrier-option",
+   "bsm-analytical",
+   "garch",
+   "var"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-binance-btc-participation-tca",
+  "category": "execution",
+  "tags": [
+   "python",
+   "crypto",
+   "execution",
+   "tca",
+   "market-microstructure",
+   "vwap",
+   "futures",
+   "binance"
+  ],
+  "deliverables": [
+   "fills.csv",
+   "order_spec.json",
+   "quotes.csv",
+   "results.json",
+   "solution.json",
+   "tca_rules.json",
+   "trades.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-bl-regime-hmm",
+  "category": "cross-domain",
+  "tags": [
+   "hmm",
+   "baum-welch",
+   "black-litterman",
+   "regime-switching",
+   "portfolio-optimization",
+   "bayesian"
+  ],
+  "deliverables": [
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-bollinger-backtest-aapl",
+  "category": "backtesting",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "bollinger-bands",
+   "backtesting",
+   "plotly",
+   "pnl-analysis",
+   "technical-analysis",
+   "adjusted-prices",
+   "transaction-costs",
+   "position-sizing",
+   "trailing-stop",
+   "risk-management"
+  ],
+  "deliverables": [
+   "aapl_prices.csv",
+   "daily_portfolio.csv",
+   "results.json",
+   "trade_analysis.json",
+   "trades.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-brinson-sector-attribution",
+  "category": "performance-attribution",
+  "tags": [
+   "brinson-fachler",
+   "sector-rotation",
+   "attribution",
+   "portfolio-management"
+  ],
+  "deliverables": [
+   "cash_rates.csv",
+   "params.json",
+   "results.json",
+   "sector_etfs.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-bs-greeks-pde",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "black-scholes",
+   "greeks",
+   "pde-residual",
+   "finite-difference"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "greeks_surface.csv",
+   "pde_verification.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-cir-bond-pricing",
+  "category": "fixed-income",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "CIR",
+   "short-rate",
+   "bond-pricing",
+   "yield-curve",
+   "Ricatti",
+   "calibration",
+   "MLE"
+  ],
+  "deliverables": [
+   "bond_prices.csv",
+   "calibration.json",
+   "forward_rates.csv",
+   "fred_rates.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-cliquet-ratchet-pricing",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "cliquet",
+   "ratchet",
+   "forward-start",
+   "option-pricing",
+   "black-scholes"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "cliquet_prices.csv",
+   "forward_start_details.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-copula-equity-fitting",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "copula",
+   "pseudo-observations",
+   "kendall-tau",
+   "tail-dependence",
+   "clayton",
+   "gumbel"
+  ],
+  "deliverables": [
+   "best_copulas.json",
+   "copula_fits.csv",
+   "data_summary.json",
+   "dj30_constituents_daily.csv",
+   "summary.json",
+   "tail_dependence.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-copula-sampling-rank-correlation",
+  "category": "dependence-modeling",
+  "tags": [
+   "python",
+   "copula",
+   "copula-sampling",
+   "kendall-tau",
+   "rank-correlation",
+   "tail-dependence"
+  ],
+  "deliverables": [
+   "parameters.json",
+   "samples.csv",
+   "summary.json",
+   "tail_dependence.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-corporate-action-adjustment",
+  "category": "tool-using",
+  "tags": [
+   "python",
+   "corporate-actions",
+   "splits",
+   "dividends",
+   "price-adjustment"
+  ],
+  "deliverables": [
+   "adjusted_prices.csv",
+   "corporate_actions.json",
+   "prices.csv",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-credit-migration-matrix",
+  "category": "credit-risk",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "credit-risk",
+   "migration-matrix",
+   "transition-probabilities",
+   "default-rates",
+   "markov-chain",
+   "chi-squared",
+   "generator-matrix"
+  ],
+  "deliverables": [
+   "Default-Rates-2018.csv",
+   "Default-Rates-2024.csv",
+   "Transition-Matrix-2018.csv",
+   "Transition-Matrix-2024.csv",
+   "average_transition_matrix.csv",
+   "cohort_default_rates.csv",
+   "cohort_sizes.csv",
+   "config.json",
+   "cumulative_default_probs.csv",
+   "generator_matrix.csv",
+   "historical_transition_matrix.csv",
+   "markov_test.csv",
+   "summary.json",
+   "transition_matrix_deviation.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-credit-spread-decomposition",
+  "category": "credit-analysis",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "ols-regression",
+   "credit-spreads",
+   "macro-finance",
+   "rolling-regression",
+   "regime-detection",
+   "newey-west",
+   "hac-inference",
+   "variance-decomposition"
+  ],
+  "deliverables": [
+   "AAA.csv",
+   "BAA.csv",
+   "DGS10.csv",
+   "T10YIE.csv",
+   "TEDRATE.csv",
+   "decomposition_results.csv",
+   "regime_breaks.csv",
+   "variance_decomposition.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-creditmetrics-portfolio-var",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "credit-risk",
+   "creditmetrics",
+   "VaR",
+   "monte-carlo",
+   "gaussian-copula"
+  ],
+  "deliverables": [
+   "loss_by_rating.csv",
+   "migration_stats.json",
+   "portfolio_loss.json",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-cross-sectional-momentum",
+  "category": "cross-sectional-strategies",
+  "tags": [
+   "python",
+   "csv",
+   "backtesting",
+   "momentum",
+   "cross-sectional",
+   "long-short",
+   "portfolio-construction",
+   "data-cleaning"
+  ],
+  "deliverables": [
+   "portfolio.csv",
+   "prices.csv",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-delta-hedging-pnl-simulation",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "scipy",
+   "black-scholes",
+   "delta-hedging",
+   "discrete-hedging",
+   "transaction-costs",
+   "discrete-dividends",
+   "escrowed-black-scholes",
+   "time-varying-iv",
+   "options"
+  ],
+  "deliverables": [
+   "dividends.csv",
+   "fee_schedule.csv",
+   "iv_path.csv",
+   "results.json",
+   "stock_path.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-digital-barrier-options",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "digital-option",
+   "cash-or-nothing",
+   "asset-or-nothing",
+   "gap-option",
+   "barrier-option"
+  ],
+  "deliverables": [
+   "barrier_digital_prices.csv",
+   "calibration.json",
+   "digital_prices.csv",
+   "gap_prices.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-earnings-surprise-calculator",
+  "category": "tool-using",
+  "tags": [
+   "python",
+   "earnings",
+   "surprise",
+   "sue",
+   "fundamental-analysis"
+  ],
+  "deliverables": [
+   "earnings.json",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-etf-cross-asset-lead-lag",
+  "category": "cross-asset-analysis",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "etf",
+   "correlation",
+   "lead-lag",
+   "cross-asset",
+   "rolling-window"
+  ],
+  "deliverables": [
+   "etf_prices.csv",
+   "lead_lag_results.csv",
+   "params.json",
+   "residual_lead_lag_results.csv",
+   "results.json",
+   "solution.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-ewma-portfolio-risk-decomposition",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "numpy",
+   "covariance",
+   "ewma",
+   "risk-decomposition",
+   "var"
+  ],
+  "deliverables": [
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-EXAMPLE-bs-greeks-pde",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "black-scholes",
+   "pde",
+   "greeks",
+   "finite-difference"
+  ],
+  "deliverables": [
+   "options.parquet",
+   "results.parquet",
+   "reward.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-fama-french-factor-model-new",
+  "category": "factor-models",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "ols-regression",
+   "fama-french",
+   "factor-model",
+   "capm",
+   "matplotlib"
+  ],
+  "deliverables": [
+   "alpha_chart.png",
+   "factor_loadings.png",
+   "ff3_factors_daily.csv",
+   "r_squared_chart.png",
+   "regression_summary.csv",
+   "results.json",
+   "rolling_betas.csv",
+   "rolling_betas.png",
+   "sector_summary.csv",
+   "stock_prices.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-first-passage-time",
+  "category": "cross-domain",
+  "tags": [
+   "python",
+   "first-passage-time",
+   "running-maximum",
+   "reflection-principle",
+   "brownian-motion"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "first_passage_time.csv",
+   "running_max_probs.csv",
+   "running_min_probs.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-fomc-tone-event-study",
+  "category": "fixed-income-nlp",
+  "tags": [
+   "nlp",
+   "event-study",
+   "fixed-income",
+   "fomc",
+   "ols-regression",
+   "pandas"
+  ],
+  "deliverables": [
+   "diagnostics.csv",
+   "event_panel.csv",
+   "fomc_statements.csv",
+   "influence.csv",
+   "results.json",
+   "tone_lexicon.json",
+   "treasury_yields.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-historical-var-data-prep",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "pandas",
+   "data-cleaning",
+   "var",
+   "risk-management"
+  ],
+  "deliverables": [
+   "results.json",
+   "returns_raw.csv",
+   "solution.json",
+   "trading_calendar.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-interest-rate-cap-floor",
+  "category": "pricing",
+  "tags": [
+   "python",
+   "cap-floor",
+   "interest-rate-derivatives",
+   "black-model",
+   "caplets"
+  ],
+  "deliverables": [
+   "params.json",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-intraday-volume-fitting-and-execution-scheduling",
+  "category": "execution",
+  "tags": [
+   "ema",
+   "intraday volume fitting",
+   "vwap",
+   "rolling evaluation",
+   "model selection"
+  ],
+  "deliverables": [
+   "Stock_Intraday_Data.csv",
+   "best_model.json",
+   "excluded_days.csv",
+   "final_schedule.csv",
+   "model_performance.csv",
+   "order.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-lob-pc-signal",
+  "category": "predictive-alpha-modeling",
+  "tags": [
+   "order-book",
+   "principal-component-analysis",
+   "time-series-analysis"
+  ],
+  "deliverables": [
+   "ADA_1min.csv",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-lookback-options",
+  "category": "derivatives_pricing",
+  "tags": [
+   "python",
+   "lookback-option",
+   "floating-strike",
+   "fixed-strike",
+   "goldman-sosin-gatto"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "fixed_strike_lookback.csv",
+   "floating_strike_lookback.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-merton-jump-diffusion",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "jump-diffusion",
+   "merton",
+   "option-pricing",
+   "calibration",
+   "MLE",
+   "implied-volatility"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "merton_prices.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-momentum-backtest",
+  "category": "backtesting",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "ema",
+   "momentum",
+   "backtesting",
+   "plotly",
+   "pnl-analysis",
+   "technical-analysis",
+   "adjusted-prices"
+  ],
+  "deliverables": [
+   "daily_portfolio.csv",
+   "results.json",
+   "spy_prices.csv",
+   "trades.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-ohlc-realized-vol-estimators",
+  "category": "volatility-modeling",
+  "tags": [
+   "python",
+   "realized-volatility",
+   "parkinson",
+   "garman-klass",
+   "rogers-satchell",
+   "yang-zhang"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "full_sample_vol.json",
+   "rolling_vol_stats.csv",
+   "spy_daily.csv",
+   "summary.json",
+   "vol_term_structure.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-option-put-call-parity-forward-audit",
+  "category": "derivatives",
+  "tags": [
+   "python",
+   "options",
+   "parity",
+   "forwards",
+   "carry",
+   "audit",
+   "no-arbitrage"
+  ],
+  "deliverables": [
+   "audit_rules.json",
+   "carry_inputs.json",
+   "option_quotes.csv",
+   "parity_audit.csv",
+   "results.json",
+   "solution.json",
+   "spot.json",
+   "violations.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-ou-jump-commodity",
+  "category": "stochastic-processes",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "ornstein-uhlenbeck",
+   "jump-diffusion",
+   "mean-reversion",
+   "commodity",
+   "calibration",
+   "MLE"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "conditional_moments.csv",
+   "fred_rates.csv",
+   "stationary_distribution.json",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-pca-factor-portfolio",
+  "category": "strategy",
+  "tags": [
+   "python",
+   "pca",
+   "factor-model",
+   "portfolio",
+   "numpy"
+  ],
+  "deliverables": [
+   "params.json",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-sma-crossover-spy",
+  "category": "backtesting",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "sma",
+   "momentum",
+   "backtesting",
+   "plotly",
+   "pnl-analysis",
+   "technical-analysis",
+   "adjusted-prices"
+  ],
+  "deliverables": [
+   "daily_portfolio.csv",
+   "results.json",
+   "spy_prices.csv",
+   "trades.csv"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-smith-tail-index",
+  "category": "extreme-value-theory",
+  "tags": [
+   "python"
+  ],
+  "deliverables": [
+   "comparison.json",
+   "hill_estimates.csv",
+   "smith_estimates.csv",
+   "sp500_daily.csv",
+   "summary.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-var-es-estimation",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "var",
+   "expected-shortfall",
+   "historical-simulation",
+   "kernel-density",
+   "mle",
+   "estimation"
+  ],
+  "deliverables": [
+   "comparison.json",
+   "estimates.csv",
+   "summary.json",
+   "true_values.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-variance-swap-replication",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "scipy",
+   "variance-swap",
+   "log-contract",
+   "replication",
+   "carr-madan",
+   "demeterfi",
+   "option-chain",
+   "bid-ask",
+   "liquidity-filter",
+   "iv-inversion",
+   "trapezoidal-integration"
+  ],
+  "deliverables": [
+   "option_chain.csv",
+   "params.json",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-yield-curve-pca-dynamics",
+  "category": "statistical-analysis",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "pca",
+   "yield-curve",
+   "fixed-income"
+  ],
+  "deliverables": [
+   "daily-treasury-rates.csv",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1-zero-coupon-bootstrapping",
+  "category": "pricing",
+  "tags": [
+   "python",
+   "yield-curve",
+   "bootstrapping",
+   "zero-rates",
+   "discount-factors"
+  ],
+  "deliverables": [
+   "curve_data.json",
+   "results.json"
+  ],
+  "author": null
+ },
+ {
+  "task_id": "t1s-12-sequential-chaos",
+  "category": "numerical-methods",
+  "tags": [
+   "performance",
+   "determinism"
+  ],
+  "deliverables": [
+   "results.json",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-13-budget-5400",
+  "category": "derivatives-pricing",
+  "tags": [
+   "budget",
+   "monte-carlo"
+  ],
+  "deliverables": [
+   "results.json",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-17-huge-instruction",
+  "category": "risk-modeling",
+  "tags": [
+   "scale"
+  ],
+  "deliverables": [
+   "returns.csv",
+   "reward.json",
+   "tail_metrics.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-19-canary-bait",
+  "category": "cross-domain",
+  "tags": [
+   "canary",
+   "injection"
+  ],
+  "deliverables": [
+   "results.json",
+   "reward.json",
+   "trades.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-20-echo-bait",
+  "category": "cross-domain",
+  "tags": [
+   "canary",
+   "echo"
+  ],
+  "deliverables": [
+   "prices.csv",
+   "report.md",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-21-strict-csv",
+  "category": "portfolio-construction",
+  "tags": [
+   "format"
+  ],
+  "deliverables": [
+   "positions.csv",
+   "reward.json",
+   "weights.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-22-dtype-contract",
+  "category": "cross-domain",
+  "tags": [
+   "format",
+   "dtypes"
+  ],
+  "deliverables": [
+   "panel.parquet",
+   "raw.csv",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-23-typed-json-array",
+  "category": "market-microstructure",
+  "tags": [
+   "format",
+   "json"
+  ],
+  "deliverables": [
+   "fills.csv",
+   "reward.json",
+   "trades.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-26-implied-vol",
+  "category": "derivatives-pricing",
+  "tags": [
+   "numerics",
+   "tolerance"
+  ],
+  "deliverables": [
+   "iv.parquet",
+   "options.parquet",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-27-curve-bootstrap",
+  "category": "fixed-income",
+  "tags": [
+   "numerics",
+   "bootstrap"
+  ],
+  "deliverables": [
+   "discount.csv",
+   "par_rates.csv",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-28-var-es",
+  "category": "risk-modeling",
+  "tags": [
+   "risk",
+   "method"
+  ],
+  "deliverables": [
+   "returns.csv",
+   "reward.json",
+   "risk.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-29-amortization",
+  "category": "fixed-income",
+  "tags": [
+   "rounding",
+   "cashflows"
+  ],
+  "deliverables": [
+   "reward.json",
+   "schedule.csv"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1s-30-degenerate-numerics",
+  "category": "derivatives-pricing",
+  "tags": [
+   "numerics",
+   "edge-cases"
+  ],
+  "deliverables": [
+   "greeks.parquet",
+   "options.parquet",
+   "reward.json"
+  ],
+  "author": "teacher"
+ },
+ {
+  "task_id": "t1-13f-amendment-aware-crowding",
+  "category": "cross-domain",
+  "tags": [
+   "python",
+   "pandas",
+   "sec-13f",
+   "regulatory-filings",
+   "amendment-resolution",
+   "holdings",
+   "turnover",
+   "overlap",
+   "crowding",
+   "data-cleaning"
+  ],
+  "deliverables": [
+   "cleaning_audit.csv",
+   "crowded_securities_latest.csv",
+   "effective_holdings.csv",
+   "filing_resolution.csv",
+   "manager_metrics.csv",
+   "overlap_latest.csv",
+   "summary.json",
+   "target_managers.csv",
+   "target_periods.csv",
+   "turnover.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-alpha-hedge-strategy",
+  "category": "cross-domain",
+  "tags": [
+   "alpha-model",
+   "factor-neutral",
+   "hedging",
+   "portfolio-construction",
+   "backtest",
+   "risk-management"
+  ],
+  "deliverables": [
+   "factors.csv",
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-american-option-fd-new",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "finite-difference",
+   "crank-nicolson",
+   "PSOR",
+   "american-options",
+   "early-exercise",
+   "dividends",
+   "greeks",
+   "convergence"
+  ],
+  "deliverables": [
+   "american_put_grid.csv",
+   "convergence.csv",
+   "early_exercise_boundary.csv",
+   "exercise_boundary.png",
+   "greeks.csv",
+   "option_values.json",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-barone-adesi-whaley",
+  "category": "cross-domain",
+  "tags": [
+   "python"
+  ],
+  "deliverables": [
+   "baw_prices.csv",
+   "binomial_comparison.csv",
+   "calibration.json",
+   "critical_prices.csv",
+   "dividend_sensitivity.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-cme-hdd-option-pricing",
+  "category": "derivatives",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "weather-derivatives",
+   "hdd",
+   "ou-process",
+   "monte-carlo",
+   "burn-analysis",
+   "cme"
+  ],
+  "deliverables": [
+   "clean_daily.csv",
+   "contract_terms.json",
+   "greeks.json",
+   "mc_stats.json",
+   "ou_diagnostics.json",
+   "results.json",
+   "solution.json",
+   "weather_observations.csv",
+   "yearly_hdd.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-compound-option-geske",
+  "category": "cross-domain",
+  "tags": [
+   "python"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "chooser_prices.csv",
+   "compound_prices.csv",
+   "parity_check.csv",
+   "spy_daily.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-credit-portfolio-var-cvar",
+  "category": "credit-risk",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "scipy",
+   "credit-risk",
+   "var",
+   "cvar",
+   "monte-carlo",
+   "gaussian-copula",
+   "t-copula",
+   "default-correlation",
+   "marginal-risk",
+   "concentration-risk",
+   "wrong-way-risk"
+  ],
+  "deliverables": [
+   "analytical_benchmark.csv",
+   "concentration_risk.json",
+   "config.json",
+   "granularity_adjustment.csv",
+   "loss_statistics.csv",
+   "marginal_contributions.csv",
+   "portfolio.csv",
+   "sector_correlations.csv",
+   "sector_risk_decomposition.csv",
+   "summary.json",
+   "var_cvar_results.csv",
+   "wrong_way_results.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-crypto-funding-rate-basis-carry",
+  "category": "crypto",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "statsmodels",
+   "crypto",
+   "perpetual-futures",
+   "funding-rate",
+   "ou-process",
+   "monte-carlo",
+   "basis-carry",
+   "regime-analysis",
+   "var",
+   "cvar"
+  ],
+  "deliverables": [
+   "funding_clean.csv",
+   "funding_rates.csv",
+   "mc_stats.json",
+   "ou_diagnostics.json",
+   "params.json",
+   "regime_stats.csv",
+   "results.json",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-cta-basel-capital",
+  "category": "regulatory-capital",
+  "tags": [
+   "ema crossover",
+   "trend-following",
+   "volatility targeting",
+   "ewma volatility",
+   "garch(1,1)",
+   "multi-step var",
+   "square-root-of-time",
+   "stressed var",
+   "basel multiplier",
+   "capital charge"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "prices.csv",
+   "results.json",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-dcc-garch-portfolio-var",
+  "category": "var-backtesting-and-data-prep",
+  "tags": [
+   "dcc-garch",
+   "dynamic conditional correlation",
+   "garch(1,1)",
+   "standardised residuals",
+   "quasi-maximum likelihood",
+   "conditional covariance",
+   "portfolio var",
+   "expected shortfall",
+   "filtered historical simulation",
+   "stationary bootstrap"
+  ],
+  "deliverables": [
+   "backtest_results.json",
+   "dcc_params.json",
+   "dynamic_correlations.csv",
+   "garch_params.csv",
+   "portfolio_var.csv",
+   "prices.csv",
+   "weights.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-double-sort",
+  "category": "factor-research",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "double-sort",
+   "betting-against-beta",
+   "momentum",
+   "transaction-costs",
+   "portfolio-construction"
+  ],
+  "deliverables": [
+   "stock_data.parquet",
+   "strategy_returns.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-dupire-local-vol",
+  "category": "cross-domain",
+  "tags": [
+   "python"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "flat_vol_test.csv",
+   "forward_variance.csv",
+   "implied_vol_surface.csv",
+   "local_vol_surface.csv",
+   "summary.json",
+   "svi_params.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-etf-overlap-redemption-pressure",
+  "category": "portfolio-analysis",
+  "tags": [
+   "python",
+   "pandas",
+   "openpyxl",
+   "etf",
+   "portfolio",
+   "overlap",
+   "redemption",
+   "liquidity",
+   "concentration"
+  ],
+  "deliverables": [
+   "curated_universe.csv",
+   "fund_scenario_bridge.csv",
+   "fund_snapshot.csv",
+   "pressure_decomposition.csv",
+   "pressure_rankings.csv",
+   "redemption_scenarios.csv",
+   "scenario_pressure.csv",
+   "scenario_summary.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-event-study-earnings",
+  "category": "factor-models",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "event-study",
+   "abnormal-returns",
+   "car",
+   "caar",
+   "earnings",
+   "market-model",
+   "ols"
+  ],
+  "deliverables": [
+   "abnormal_returns.csv",
+   "caar_summary.json",
+   "car_per_event.csv",
+   "events.csv",
+   "market_model_params.csv",
+   "market_prices.csv",
+   "statistical_tests.json",
+   "stock_prices.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-evt-pot-var",
+  "category": "risk-management",
+  "tags": [
+   "extreme-value-theory",
+   "pot",
+   "gpd",
+   "var",
+   "expected-shortfall",
+   "tail-risk",
+   "backtesting",
+   "kupiec",
+   "christoffersen",
+   "garch"
+  ],
+  "deliverables": [
+   "formulas.md",
+   "params.json",
+   "results.json",
+   "solution.json",
+   "sp500.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-fft-compound-poisson",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "fft",
+   "compound-poisson",
+   "aggregate-loss",
+   "var",
+   "expected-shortfall"
+  ],
+  "deliverables": [
+   "comparison.json",
+   "fft_results.json",
+   "mc_results.json",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-form4-cross-sectional-sale-pressure",
+  "category": "event-studies-and-filings",
+  "tags": [
+   "form 4",
+   "insider",
+   "sale pressure",
+   "non-derivative",
+   "ownership",
+   "footnote",
+   "price range",
+   "adv20",
+   "float",
+   "shares outstanding"
+  ],
+  "deliverables": [
+   "cross_sectional_rankings.csv",
+   "entity_day_sale_pressure.csv",
+   "issuer_pressure_scenarios.csv",
+   "market_context.csv",
+   "ownership_rollforward.csv",
+   "pressure_decomposition.csv",
+   "summary.json",
+   "transactions_normalized.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-fx-carry-forward-hedge",
+  "category": "fx-strategy",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "fx",
+   "carry-trade",
+   "g10-fx",
+   "fx-forwards",
+   "forward-hedging",
+   "garman-kohlhagen",
+   "cip",
+   "delta-hedging",
+   "put-call-parity",
+   "ndf",
+   "fx-smile",
+   "date-conventions",
+   "bid-offer",
+   "day-counts",
+   "risk-metrics"
+  ],
+  "deliverables": [
+   "carry_signals.csv",
+   "cross_rates.json",
+   "date_diagnostics.json",
+   "day_counts.json",
+   "deposit_bidoffer.json",
+   "deposit_rates.csv",
+   "equity_correlation.csv",
+   "forward_rates.json",
+   "greeks.json",
+   "holiday_calendar.json",
+   "implied_yields.json",
+   "market_forwards.json",
+   "ndf_analysis.json",
+   "ndf_quotes.json",
+   "option_params.json",
+   "option_prices.json",
+   "pair_conventions.json",
+   "params.json",
+   "payable_schedule.json",
+   "portfolio_returns.csv",
+   "risk_metrics.json",
+   "roll_costs.csv",
+   "smile_reconstruction.json",
+   "spot_bidoffer.json",
+   "spot_rates.csv",
+   "spx.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-fx-forward-cross-rate",
+  "category": "fx-pricing",
+  "tags": [
+   "fx",
+   "forward-rates",
+   "cross-rates",
+   "covered-interest-parity",
+   "bid-ask",
+   "day-count-convention",
+   "settlement",
+   "portfolio-valuation",
+   "pnl-attribution"
+  ],
+  "deliverables": [
+   "deposit_rates.csv",
+   "historical_spots.csv",
+   "params.json",
+   "portfolio.csv",
+   "results.json",
+   "spot_rates.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-geometric-mean-reverting-jd",
+  "category": "fixed-income",
+  "tags": [
+   "python"
+  ],
+  "deliverables": [
+   "calibration.json",
+   "conditional_moments.csv",
+   "forward_curve.csv",
+   "fred_rates.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-hull-white-swaption",
+  "category": "interest-rate-derivatives",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "hull-white",
+   "short-rate-model",
+   "trinomial-tree",
+   "swaption",
+   "caplet",
+   "jamshidian",
+   "calibration",
+   "arrow-debreu"
+  ],
+  "deliverables": [
+   "bermudan_prices.json",
+   "calibration.json",
+   "calibration_fit.png",
+   "market_data.json",
+   "summary.json",
+   "swaption_prices.json",
+   "tree_diagnostics.csv",
+   "yield_curve.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-implied-vol-approximations",
+  "category": "implied-vol-and-parity",
+  "tags": [
+   "implied volatility",
+   "brenner-subrahmanyam",
+   "corrado-miller",
+   "li atm",
+   "newton-raphson",
+   "approximation",
+   "black-scholes grid",
+   "moneyness",
+   "dividend yield",
+   "rmse"
+  ],
+  "deliverables": [
+   "approximations.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-ipca-latent-factors",
+  "category": "factor-models-and-sorts",
+  "tags": [
+   "ipca",
+   "instrumented principal components",
+   "latent factors",
+   "alternating least squares",
+   "characteristics",
+   "loadings",
+   "gamma matrix",
+   "total r-squared",
+   "cross-sectional r-squared",
+   "grs test"
+  ],
+  "deliverables": [
+   "characteristics.csv",
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-kelly-var-sizing",
+  "category": "cross-domain",
+  "tags": [
+   "kelly-criterion",
+   "var",
+   "monte-carlo",
+   "drawdown",
+   "sharpe-ratio",
+   "covariance-inversion"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-localvol-barrier",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "scipy",
+   "btc-options",
+   "crypto-options",
+   "local-volatility",
+   "dupire",
+   "barrier-option",
+   "monte-carlo",
+   "market-data-cleaning",
+   "surface-construction"
+  ],
+  "deliverables": [
+   "barrier_contract.json",
+   "barrier_results.json",
+   "call_surface.csv",
+   "cleaned_quotes.csv",
+   "deribit_btc_option_snapshot.csv",
+   "local_vol_surface.csv",
+   "snapshot_metadata.json",
+   "summary.json",
+   "surface_nodes.csv",
+   "task_rules.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-mc-greek-surface-1",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "monte-carlo",
+   "greeks",
+   "pathwise",
+   "likelihood-ratio",
+   "finite-difference",
+   "black-scholes",
+   "asian-option",
+   "delta-surface"
+  ],
+  "deliverables": [
+   "consistency.json",
+   "convergence.csv",
+   "delta_surface.csv",
+   "delta_surface.png",
+   "greeks.json",
+   "prices.json",
+   "summary.json",
+   "vega_surface.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-mtm-xccy-basis-desk",
+  "category": "cross-currency-rates",
+  "tags": [
+   "python",
+   "numpy",
+   "pandas",
+   "fixed-income",
+   "fx",
+   "cross-currency-swap",
+   "ois",
+   "fra",
+   "curve-bootstrapping",
+   "risk"
+  ],
+  "deliverables": [
+   "basis_curve.csv",
+   "cashflow_schedule.csv",
+   "cleaned_quotes.csv",
+   "fx_forward_curve.csv",
+   "gbp_curve.csv",
+   "libor_fixings.csv",
+   "market_quotes.csv",
+   "reconciliation.json",
+   "results.json",
+   "solution.json",
+   "stress_results.csv",
+   "summary.json",
+   "trade.json",
+   "trade_schedule.csv",
+   "usd_curve.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-multimodal-alpha-fusion-edgar-cot-gdelt",
+  "category": "cross-domain",
+  "tags": [
+   "multimodal",
+   "edgar",
+   "sec-data-library",
+   "cftc",
+   "gdelt",
+   "vendor-audit",
+   "committee",
+   "ou",
+   "jump-diffusion",
+   "alpha",
+   "backtesting"
+  ],
+  "deliverables": [
+   "alpha_panel.csv",
+   "committee_panel.csv",
+   "cot_macro_features.csv",
+   "forward_returns.csv",
+   "fundamental_features.csv",
+   "gdelt_news_features.csv",
+   "issuer_activity_features.csv",
+   "issuer_universe.csv",
+   "modality_diagnostics.csv",
+   "params.json",
+   "portfolio_returns.csv",
+   "process_diagnostics.csv",
+   "rebalance_dates.csv",
+   "results.json",
+   "solution.json",
+   "vendor_bulletins.csv",
+   "vendor_data_v1.csv",
+   "vendor_data_v2.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-polars-api-migration",
+  "category": "var-backtesting-and-data-prep",
+  "tags": [
+   "polars",
+   "migration",
+   "api migration",
+   "pipeline_old",
+   "pipeline_new",
+   "deprecationwarning",
+   "lazy",
+   "eager",
+   "write_csv",
+   "group_by"
+  ],
+  "deliverables": [
+   "ticker_data_pilot.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-prediction-markets-cross-venue-dislocation",
+  "category": "cross-domain",
+  "tags": [
+   "prediction-markets",
+   "cross-venue",
+   "market-microstructure",
+   "dislocation",
+   "arbitrage",
+   "backtesting"
+  ],
+  "deliverables": [
+   "candidate_snapshots.csv",
+   "daily_equity.csv",
+   "fees.json",
+   "market_pairs.csv",
+   "price_snapshots.csv",
+   "results.json",
+   "solution.json",
+   "trade_log.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-realized-vol-estimators",
+  "category": "cross-domain",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "realized-volatility",
+   "bipower-variation",
+   "signature-plot",
+   "noise-correction",
+   "bandi-russell",
+   "high-frequency",
+   "microstructure"
+  ],
+  "deliverables": [
+   "results.json",
+   "spy_intraday.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-regime-cta-vol-target",
+  "category": "backtest-conventions",
+  "tags": [
+   "cta",
+   "trend following",
+   "ema crossover",
+   "ewma volatility",
+   "vol_target",
+   "garch(1,1)",
+   "composite volatility",
+   "regime",
+   "sharpe_improvement",
+   "calmar"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "prices.csv",
+   "results.json",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-regime-riskparity-cvar",
+  "category": "portfolio-construction",
+  "tags": [
+   "absorption ratio",
+   "eigenvalue",
+   "marchenko-pastur",
+   "risk parity",
+   "inverse-volatility",
+   "regime",
+   "risk_budget",
+   "cvar",
+   "historical simulation",
+   "monthly rebalance"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "sector_map.json",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-residual-momentum",
+  "category": "factor-research",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "fama-macbeth",
+   "momentum",
+   "residual-momentum",
+   "cross-sectional"
+  ],
+  "deliverables": [
+   "fmb_results.json",
+   "monthly_fmb_coefficients.csv",
+   "monthly_oos_spread_returns.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-sec-10k-report-long",
+  "category": "cross-domain",
+  "tags": [
+   "sec-10k-report",
+   "fundamental-analysis",
+   "earnings-key-metric-extraction"
+  ],
+  "deliverables": [
+   "results.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-sec-8k-event-alpha",
+  "category": "event-driven-analysis, data-processing",
+  "tags": [
+   "sec",
+   "8-k",
+   "event-driven",
+   "signal-generation",
+   "document-parsing",
+   "alpha"
+  ],
+  "deliverables": [
+   "filing_signals.csv",
+   "params.json",
+   "results.json",
+   "solution.json",
+   "universe.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-sentiment-factor-alpha",
+  "category": "backtest-conventions",
+  "tags": [
+   "sentiment",
+   "social media posts",
+   "bullish",
+   "bearish",
+   "engagement",
+   "momentum signal",
+   "long-short",
+   "vol_target_annual",
+   "information coefficient",
+   "jensen alpha"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "market_factor.csv",
+   "params.json",
+   "posts.json",
+   "prices.csv",
+   "results.json",
+   "sentiment_words.json",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-spread-option-kirk-margrabe",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "spread-options",
+   "kirk",
+   "margrabe",
+   "exchange-option",
+   "correlation",
+   "multi-asset"
+  ],
+  "deliverables": [
+   "aapl_daily.csv",
+   "calibration.json",
+   "correlation_sensitivity.csv",
+   "kirk_prices.csv",
+   "margrabe_prices.csv",
+   "msft_daily.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-stable-residual",
+  "category": "factor-research",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "cross-sectional",
+   "residualization",
+   "long-short",
+   "beta-neutral",
+   "turnover-cap",
+   "transaction-costs",
+   "portfolio-construction"
+  ],
+  "deliverables": [
+   "coefficients_last_rebalance.csv",
+   "final_month_weights.csv",
+   "monthly_results.csv",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-standard-var-methods",
+  "category": "risk-management",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "pandas",
+   "var",
+   "market-risk"
+  ],
+  "deliverables": [
+   "backtest.json",
+   "data_summary.json",
+   "pair_aapl_jpm_daily.csv",
+   "summary.json",
+   "var_10day.csv",
+   "var_1day.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-stochvol-implied-surface-new",
+  "category": "derivatives-pricing",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "stochastic-volatility",
+   "heston",
+   "option-pricing",
+   "implied-volatility",
+   "characteristic-function",
+   "numerical-integration",
+   "gauss-legendre",
+   "volatility-surface",
+   "skew"
+  ],
+  "deliverables": [
+   "integration_comparison.csv",
+   "iv_surface.csv",
+   "iv_surface.png",
+   "local_vol_surface.csv",
+   "local_vol_surface.png",
+   "option_prices.csv",
+   "put_parity_check.csv",
+   "put_prices.csv",
+   "smile_slices.png",
+   "summary.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-structured-note-risk",
+  "category": "var-es-methods",
+  "tags": [
+   "structured note",
+   "garch(1,1)",
+   "zero-coupon bond",
+   "barrier option",
+   "participation",
+   "fair value",
+   "breakeven volatility",
+   "markup",
+   "down-and-out",
+   "delta"
+  ],
+  "deliverables": [
+   "glossary.json",
+   "params.json",
+   "results.json",
+   "returns.csv",
+   "solution.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-swap-curve-bootstrap-ois",
+  "category": "fixed-income",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "bootstrap",
+   "swap-curve",
+   "ois",
+   "libor",
+   "dual-curve",
+   "irs",
+   "fixed-income"
+  ],
+  "deliverables": [
+   "conventions.json",
+   "deposits.csv",
+   "irs_3m_quotes.csv",
+   "libor_forward_curve.csv",
+   "ois_discount_curve.csv",
+   "ois_quotes.csv",
+   "provenance.md",
+   "repriced_quotes.csv",
+   "summary.json",
+   "swap_to_value.json",
+   "swap_valuation.json"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-yield-curve-bond-immunization",
+  "category": "fixed-income",
+  "tags": [
+   "python",
+   "numpy",
+   "scipy",
+   "yield-curve",
+   "bootstrapping",
+   "bond-pricing",
+   "key-rate-duration",
+   "immunization",
+   "optimization",
+   "pca",
+   "callable-bonds",
+   "floating-rate-notes",
+   "market-conventions"
+  ],
+  "deliverables": [
+   "curve_snapshot_t0.json",
+   "curve_snapshot_t1.json",
+   "hedge_instruments.json",
+   "hedge_t0.json",
+   "hedge_t1.json",
+   "instrument_analytics_t0.json",
+   "krd_factor_exposures_t0.csv",
+   "liability_schedule.json",
+   "stress_results.json",
+   "summary.json",
+   "treasury_par_yields.csv",
+   "zero_curve_t0.csv",
+   "zero_curve_t1.csv"
+  ],
+  "author": "team"
+ },
+ {
+  "task_id": "t1-yield-curve-bootstrap-immunization",
+  "category": "fixed-income",
+  "tags": [
+   "python",
+   "pandas",
+   "numpy",
+   "scipy",
+   "yield-curve",
+   "bootstrapping",
+   "zero-coupon",
+   "key-rate-duration",
+   "immunization",
+   "fixed-income",
+   "optimization",
+   "stress-testing"
+  ],
+  "deliverables": [
+   "bond_analytics.csv",
+   "bonds.csv",
+   "discount_factors.csv",
+   "immunization_portfolio.json",
+   "liability.json",
+   "liability_analytics.json",
+   "nelson_siegel.json",
+   "par_yields.csv",
+   "stress_test.csv"
+  ],
+  "author": "team"
+ }
+]

@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-09-drawdown-series-and-summary",
+ "category": "risk-management",
+ "difficulty": "hard",
+ "tags": [
+  "drawdown",
+  "running-maximum",
+  "cross-file"
+ ],
+ "title": "Drawdown series with a summary that points into it",
+ "keywords": [
+  "date",
+  "drawdown",
+  "nav",
+  "peak",
+  "task",
+  "series",
+  "csv",
+  "columns",
+  "observation",
+  "running_peak",
+  "trough",
+  "json",
+  "max_drawdown",
+  "yyyy-mm-dd",
+  "analysis",
+  "environment",
+  "nav_history",
+  "every",
+  "running",
+  "including",
+  "defined",
+  "summarise",
+  "worst",
+  "reached",
+  "fell",
+  "one",
+  "row",
+  "same",
+  "order",
+  "drawdown_summary",
+  "peak_date",
+  "trough_date",
+  "n_observations",
+  "negative",
+  "zero",
+  "come",
+  "before",
+  "both",
+  "appear"
+ ],
+ "deliverables": [
+  "drawdown.csv",
+  "drawdown_summary.json",
+  "nav_history.csv"
+ ],
+ "source": "\"\"\"Running peak, drawdown series, and the worst drawdown's peak and trough dates.\n\ndrawdown_t = nav_t / max(nav_0..nav_t) - 1. The trough is the date of the most\nnegative drawdown (first occurrence); the peak it fell from is the date, at or\nbefore the trough, on which the NAV stood at that running peak (the most recent\nsuch date - the peak the fall actually started from).\n\"\"\"\nimport json\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/nav_history.csv\"\nOUT_DIR = \"/app/output\"\n\n\ndef main() -> None:\n    raw = pd.read_csv(INPUT)\n    nav = raw[\"nav\"].astype(float).to_numpy()\n    peak = np.maximum.accumulate(nav)\n    dd = nav / peak - 1.0\n\n    trough = int(np.argmin(dd))\n    at_peak = np.flatnonzero(nav[: trough + 1] >= peak[trough] - 1e-12)\n    peak_idx = int(at_peak[-1])\n\n    def fmt(d) -> str:\n        return pd.Timestamp(d).strftime(\"%Y-%m-%d\")\n\n    series = pd.DataFrame({\"date\": raw[\"date\"], \"running_peak\": peak, \"drawdown\": dd})\n    summary = {\n        \"max_drawdown\": float(dd[trough]),\n        \"peak_date\": fmt(raw[\"date\"].iloc[peak_idx]),\n        \"trough_date\": fmt(raw[\"date\"].iloc[trough]),\n        \"n_observations\": int(len(raw)),\n    }\n    assert summary[\"max_drawdown\"] <= 0.0\n    if summary[\"max_drawdown\"] < 0.0:\n        assert peak_idx < trough, \"the peak must come before the trough\"\n\n    os.makedirs(OUT_DIR, exist_ok=True)\n    series.to_csv(os.path.join(OUT_DIR, \"drawdown.csv\"), index=False, float_format=\"%.17g\")\n    with open(os.path.join(OUT_DIR, \"drawdown_summary.json\"), \"w\", encoding=\"utf-8\") as fh:\n        json.dump(summary, fh, indent=2)\n    back = pd.read_csv(os.path.join(OUT_DIR, \"drawdown.csv\"))\n    assert len(back) == len(raw) and list(back.columns) == [\"date\", \"running_peak\", \"drawdown\"]\n    print(summary)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-09-drawdown-series-and-summary\\20260915T112903"
+ }
+}

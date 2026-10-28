@@ -1,0 +1,63 @@
+{
+ "task_id": "t1s-28-var-es",
+ "category": "risk-modeling",
+ "difficulty": "hard",
+ "tags": [
+  "risk",
+  "method"
+ ],
+ "title": "Historical VaR and ES at two levels, method pinned",
+ "keywords": [
+  "ret",
+  "var",
+  "method",
+  "level",
+  "alpha",
+  "numpy",
+  "deliverables",
+  "json",
+  "var_95",
+  "var_99",
+  "task",
+  "historical",
+  "expected",
+  "shortfall",
+  "environment",
+  "csv",
+  "columns",
+  "date",
+  "normative",
+  "confidence",
+  "quantile",
+  "linear",
+  "var_alpha",
+  "es_alpha",
+  "mean",
+  "risk",
+  "keys",
+  "es_95",
+  "es_99",
+  "absolute",
+  "tolerance",
+  "e-10",
+  "additionally",
+  "hold",
+  "constraints",
+  "restricted",
+  "network",
+  "you",
+  "need",
+  "language"
+ ],
+ "deliverables": [
+  "returns.csv",
+  "reward.json",
+  "risk.json"
+ ],
+ "source": "import json, os\nimport numpy as np\nimport pandas as pd\nret = pd.read_csv(\"/input/environment/data/returns.csv\")[\"ret\"].to_numpy(float)\nout = {}\nfor a in (0.95, 0.99):\n    q = np.quantile(ret, 1 - a, method=\"linear\")\n    tag = str(int(round(a * 100)))\n    out[f\"var_{tag}\"] = float(-q)\n    out[f\"es_{tag}\"] = float(-ret[ret <= q].mean())\nos.makedirs(\"/app/output\", exist_ok=True)\njson.dump(out, open(\"/app/output/risk.json\", \"w\"), indent=2)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-28-var-es\\20260915T130512"
+ }
+}

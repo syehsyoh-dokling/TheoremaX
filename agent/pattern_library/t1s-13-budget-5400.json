@@ -1,0 +1,62 @@
+{
+ "task_id": "t1s-13-budget-5400",
+ "category": "derivatives-pricing",
+ "difficulty": "expert",
+ "tags": [
+  "budget",
+  "monte-carlo"
+ ],
+ "title": "Arithmetic Asian option by Monte Carlo under a 5400-second card",
+ "keywords": [
+  "task",
+  "asian",
+  "call",
+  "monte",
+  "carlo",
+  "price",
+  "paths",
+  "json",
+  "arithmetic-average",
+  "unit",
+  "card",
+  "sets",
+  "agent",
+  "timeout_sec",
+  "arithmetic-average-price",
+  "geometric",
+  "brownian",
+  "motion",
+  "sigma",
+  "equally",
+  "spaced",
+  "monthly",
+  "observations",
+  "least",
+  "variance",
+  "reduction",
+  "welcome",
+  "results",
+  "keys",
+  "discounted",
+  "expected",
+  "payoff",
+  "tolerance",
+  "absolute",
+  "n_paths",
+  "number",
+  "actually",
+  "integer",
+  "constraints",
+  "restricted"
+ ],
+ "deliverables": [
+  "results.json",
+  "reward.json"
+ ],
+ "source": "import json, math, os\nimport numpy as np\nfrom scipy.stats import norm\n# Arithmetic Asian call; the geometric Asian (closed form) is the control variate.\nS0, K, r, s, T, n_obs = 100.0, 100.0, 0.02, 0.3, 1.0, 12\ndt = T / n_obs\nt = np.arange(1, n_obs + 1) * dt\nmu_g = math.log(S0) + (r - 0.5 * s * s) * t.mean()\nvar_g = s * s * np.minimum.outer(t, t).sum() / n_obs ** 2\nd1 = (mu_g - math.log(K) + var_g) / math.sqrt(var_g)\nd2 = d1 - math.sqrt(var_g)\ngeo_cf = math.exp(-r * T) * (math.exp(mu_g + 0.5 * var_g) * norm.cdf(d1) - K * norm.cdf(d2))\nrng = np.random.default_rng(20260915)\nn_paths, batch = 2_000_000, 200_000\narith, geo = [], []\nfor _ in range(n_paths // batch):\n    z = rng.standard_normal((batch, n_obs))\n    logs = math.log(S0) + np.cumsum((r - 0.5 * s * s) * dt + s * math.sqrt(dt) * z, axis=1)\n    arith.append(math.exp(-r * T) * np.maximum(np.exp(logs).mean(axis=1) - K, 0.0))\n    geo.append(math.exp(-r * T) * np.maximum(np.exp(logs.mean(axis=1)) - K, 0.0))\nA, G = np.concatenate(arith), np.concatenate(geo)\nbeta = np.cov(A, G, ddof=1)[0, 1] / G.var(ddof=1)\nos.makedirs(\"/app/output\", exist_ok=True)\njson.dump({\"price\": float((A - beta * (G - geo_cf)).mean()), \"n_paths\": int(n_paths)},\n          open(\"/app/output/results.json\", \"w\"), indent=2)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-13-budget-5400\\20260915T130213"
+ }
+}

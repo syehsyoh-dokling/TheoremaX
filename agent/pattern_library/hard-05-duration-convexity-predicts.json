@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-05-duration-convexity-predicts",
+ "category": "fixed-income",
+ "difficulty": "hard",
+ "tags": [
+  "duration",
+  "convexity",
+  "taylor"
+ ],
+ "title": "Duration and convexity that actually predict a yield shift",
+ "keywords": [
+  "convexity",
+  "repricing",
+  "duration",
+  "task",
+  "bond",
+  "analytics",
+  "predict",
+  "parquet",
+  "columns",
+  "bond_id",
+  "maturity",
+  "price",
+  "macaulay",
+  "modified",
+  "yield",
+  "modified_duration",
+  "environment",
+  "bonds",
+  "maturity_years",
+  "coupon_rate",
+  "ytm",
+  "face",
+  "annual",
+  "coupons",
+  "first",
+  "payment",
+  "one",
+  "year",
+  "now",
+  "principal",
+  "stated",
+  "independent",
+  "numbers",
+  "second-order",
+  "expansion",
+  "true",
+  "small",
+  "shift",
+  "your",
+  "checked"
+ ],
+ "deliverables": [
+  "analytics.parquet",
+  "bonds.parquet"
+ ],
+ "source": "\"\"\"Price, Macaulay and modified duration, and convexity for annual-coupon bonds.\n\nWith annual compounding at yield y and cash flows CF_t at t = 1..n:\n    P          = sum CF_t (1+y)^-t\n    D_mac      = sum t CF_t (1+y)^-t / P\n    D_mod      = D_mac / (1+y)                 = -(1/P) dP/dy\n    convexity  = sum t(t+1) CF_t (1+y)^-(t+2) / P  = (1/P) d2P/dy2\nso dP/P = -D_mod dy + 0.5 convexity dy^2 is the second-order Taylor expansion,\nwhich the program verifies against a full repricing at +/-25bp before writing.\n\"\"\"\nimport math\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/bonds.parquet\"\nOUT = \"/app/output/analytics.parquet\"\n\n\ndef schedule(maturity: float, coupon_rate: float, face: float) -> tuple[np.ndarray, np.ndarray]:\n    n = int(round(maturity))\n    if abs(maturity - n) < 1e-9 and n >= 1:\n        times = np.arange(1, n + 1, dtype=float)\n    else:                                   # non-integer maturity: annual coupons, stub at maturity\n        times = np.append(np.arange(1, math.floor(maturity) + 1, dtype=float), maturity)\n    cfs = np.full(times.shape, coupon_rate * face)\n    cfs[-1] += face\n    return times, cfs\n\n\ndef price(times, cfs, y):\n    return float(np.sum(cfs * (1.0 + y) ** -times))\n\n\ndef main() -> None:\n    bonds = pd.read_parquet(INPUT)\n    rows, warnings = [], []\n    for b in bonds.itertuples(index=False):\n        t, cf = schedule(float(b.maturity_years), float(b.coupon_rate), float(b.face))\n        y = float(b.ytm)\n        disc = (1.0 + y) ** -t\n        p = float(np.sum(cf * disc))\n        mac = float(np.sum(t * cf * disc) / p)\n        mod = mac / (1.0 + y)\n        conv = float(np.sum(t * (t + 1.0) * cf * (1.0 + y) ** -(t + 2.0)) / p)\n\n        # Self-check, but one that can never block the deliverable. The first\n        # version asserted |true - Taylor| < 1e-5 and crashed on a long bond\n        # whose THIRD-order term exceeds that at 25bp - a correct answer that\n        # wrote no file and scored 0. What must hold is that adding convexity\n        # IMPROVES on duration alone; how close a second-order expansion gets\n        # is the grader's tolerance to set, not ours.\n        for dy in (0.0025, -0.0025):\n            true = price(t, cf, y + dy) / p - 1.0\n            first = -mod * dy\n            second = first + 0.5 * conv * dy * dy\n            if abs(true - second) > abs(true - first):\n                warnings.append(f\"{b.bond_id}: convexity did not improve the repricing at {dy}\")\n        rows.append({\"bond_id\": b.bond_id, \"price\": p, \"macaulay_duration\": mac,\n                     \"modified_duration\": mod, \"convexity\": conv})\n\n    out = pd.DataFrame(rows, columns=[\"bond_id\", \"price\", \"macaulay_duration\",\n                                      \"modified_duration\", \"convexity\"])\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_parquet(OUT, index=False)                      # write first, then report doubts\n    back = pd.read_parquet(OUT)\n    assert len(back) == len(bonds) and list(back.columns) == list(out.columns)\n    for w in warnings:\n        print(\"WARNING\", w)\n    print(out.describe().T[[\"min\", \"max\"]])\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-05-duration-convexity-predicts\\20260915T114221"
+ }
+}

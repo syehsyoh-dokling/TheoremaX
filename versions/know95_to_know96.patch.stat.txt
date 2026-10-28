@@ -1,0 +1,2 @@
+﻿ .../agent_core/genrt/soft_run.py" => "C:\\Users\\Saifuddin\\Documents\\Agenthon-2026\\submissions\\2026-10-13\\t1_know96_ctx/agent_core/genrt/soft_run.py"                      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)

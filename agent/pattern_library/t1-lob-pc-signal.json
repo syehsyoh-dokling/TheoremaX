@@ -1,0 +1,63 @@
+{
+ "task_id": "t1-lob-pc-signal",
+ "category": "predictive-alpha-modeling",
+ "difficulty": "medium",
+ "tags": [
+  "order-book",
+  "principal-component-analysis",
+  "time-series-analysis"
+ ],
+ "title": "Lob Pc Signal",
+ "keywords": [
+  "number",
+  "ofi",
+  "you",
+  "weighted",
+  "pca",
+  "order",
+  "flow",
+  "model",
+  "pc1",
+  "rolling",
+  "regression",
+  "true",
+  "run",
+  "side",
+  "forward",
+  "before",
+  "some",
+  "minute",
+  "next",
+  "need",
+  "get",
+  "predictions",
+  "app",
+  "setup",
+  "weight",
+  "between",
+  "just",
+  "window",
+  "step",
+  "target",
+  "inside",
+  "your",
+  "prediction",
+  "ols",
+  "predict",
+  "results",
+  "json",
+  "follow",
+  "depth",
+  "indices"
+ ],
+ "deliverables": [
+  "ADA_1min.csv",
+  "results.json"
+ ],
+ "source": "\"\"\"LOB PC signal: weighted true OFI over 15 levels -> rolling (40) z-score + PCA(1) -> OLS -> next-step prediction.\"\"\"\nimport json\nimport os\n\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import pearsonr, spearmanr\n\n\ndef find(name):\n    for d in (os.environ.get(\"T1_DATA\", \"/app/data\"), \"/app/data\", \"/app\", \"/input/environment/data\", \"/input\"):\n        p = os.path.join(d, name)\n        if os.path.exists(p):\n            return p\n    raise FileNotFoundError(name)\n\n\nOUT = os.environ.get(\"T1_OUT\", \"/app/output\")\nos.makedirs(OUT, exist_ok=True)\nL, W = 15, 40\n\ndf = pd.read_csv(find(\"ADA_1min.csv\"))\nif \"system_time\" in df.columns:\n    df = df.sort_values(\"system_time\", kind=\"mergesort\").reset_index(drop=True)\nn = len(df)\n\n\ndef side(prefix):\n    lim = df[[f\"{prefix}_limit_notional_{i}\" for i in range(L)]].to_numpy(float)\n    can = df[[f\"{prefix}_cancel_notional_{i}\" for i in range(L)]].to_numpy(float)\n    mkt = df[[f\"{prefix}_market_notional_{i}\" for i in range(L)]].to_numpy(float)\n    dist = df[[f\"{prefix}_distance_{i}\" for i in range(L)]].to_numpy(float)\n    true_flow = lim - can - mkt                      # limit orders net of cancels and market orders\n    return true_flow / (1.0 + np.abs(dist))          # inverse-distance weight\n\n\nwofi = side(\"bids\") - side(\"asks\")                    # (n, 15): bid pressure minus ask pressure\nmid = df[\"midpoint\"].to_numpy(float)\nfwd = np.full(n, np.nan)\nfwd[:-1] = np.log(mid[1:] / mid[:-1])                 # forward 1-minute log return\n\npc1_test = np.full(n, np.nan)\npred = np.full(n, np.nan)\nfor t in range(W, n):\n    X = wofi[t - W:t]\n    y = fwd[t - W:t]                                  # targets of rows t-40..t-1 are all known at t\n    if np.isnan(y).any() or np.isnan(X).any():\n        continue\n    mu = X.mean(axis=0)\n    sd = X.std(axis=0, ddof=0)                        # StandardScaler convention\n    sd[sd == 0] = 1.0\n    Z = (X - mu) / sd\n    # PCA(1) on z-scored features (PCA centres Z; its mean is already 0)\n    _, _, vt = np.linalg.svd(Z - Z.mean(axis=0), full_matrices=False)\n    v = vt[0]\n    pc_tr = Z @ v\n    if np.corrcoef(pc_tr, X[:, 0])[0, 1] < 0:        # sign rule: corr(PC1, weighted_ofi_0) >= 0\n        v = -v\n        pc_tr = -pc_tr\n    A = np.column_stack([np.ones(W), pc_tr])\n    b0, b1 = np.linalg.lstsq(A, y, rcond=None)[0]     # OLS with intercept\n    z_t = (wofi[t] - mu) / sd\n    pc1_test[t] = z_t @ v\n    pred[t] = b0 + b1 * pc1_test[t]\n\nok = ~np.isnan(pred) & ~np.isnan(fwd)\nres = {}\nfor i in (0, 10, 20, 30):\n    res[f\"midpoint_return_fwd_index{i}\"] = float(fwd[i])\n    for d in (0, 2, 4, 6):\n        res[f\"weighted_ofi_{d}_index{i}\"] = float(wofi[i, d])\nfor i in (40, 50, 60, 70):\n    res[f\"rolling_pc1_index{i}\"] = float(pc1_test[i])\n    res[f\"predicted_return_index{i}\"] = float(pred[i])\nres[\"spearman_ic\"] = float(spearmanr(pred[ok], fwd[ok]).statistic)\nres[\"pearson_ic\"] = float(pearsonr(pred[ok], fwd[ok]).statistic)\nwith open(os.path.join(OUT, \"results.json\"), \"w\") as f:\n    json.dump(res, f, indent=2)\nprint(\"n predictions scored:\", int(ok.sum()))\nprint(json.dumps(res, indent=2))\n",
+ "provenance": {
+  "origin": "team solution t1_solutions/t1-lob-pc-signal",
+  "verified": "reward 1.0 by the unit's own checker, VPS sandbox, 25 Sep"
+ },
+ "notes": "# Theory notes: multi-level weighted OFI -> rolling PCA -> rolling OLS signal\n\n> CAVEAT: the exported reference program reads a different column schema\n> (per-level prices/volumes) than the data file shipped with this unit, which\n> carries per-level limit / cancel / market notional flows plus distances and a\n> midpoint column. Steps 3-8 (walk-forward, z-score, PCA, sign fix, OLS, IC) are\n> schema-independent and follow the reference program. The flow step (1-2) below\n> is written from the definition, adapted to whatever flow columns exist - check\n> the data header first.\n\n## 1. Task type\nHigh-frequency alpha research: build a per-level order-flow-imbalance (OFI)\nfeature panel, compress it to one factor with rolling PCA, and forecast the next\nmid-price log return with a rolling OLS; evaluate with Spearman/Pearson IC.\n\n## 2. Method\n1. Sort rows by timestamp; keep all rows (row count must be preserved).\n2. Per level i and side: \"true flow\" = limit-order flow minus cancel flow minus\n   market-order flow. If the file gives these three components directly, use\n   them. If it only gives resting size snapshots, the equivalent quantity is the\n   change in resting size at that level (size_t - size_{t-1}), which equals\n   LO - C - M in every price-move case.\n3. Distance weight per side and level: w = 1 / (1 + |distance|).\n4. Weighted OFI_i = w_bid,i * flow_bid,i - w_ask,i * flow_ask,i (bid adds buy\n   pressure, ask adds sell pressure, so ask is subtracted).\n5. Target at row t: forward log mid return r_t = ln(mid_{t+1} / mid_t); last row NaN.\n6. Walk-forward loop for t = W .. n-1 with training rows [t-W, t-1]:\n   a. skip t if any training target is NaN;\n   b. z-score each of the level features with the training mean and population std\n      (ddof=0); replace zero std with 1;\n   c. PCA(n_components=1, random_state=0) on the z-scored training block;\n   d. sign fix: if corr(PC1_train, raw level-0 OFI in training) < 0, flip PC1;\n   e. OLS with intercept of r on PC1_train;\n   f. test row t: z-score with TRAINING mu/sd, project on the component,\n      apply the same flip, predict.\n7. Store pc1[t] and pred[t]; report selected indices directly.\n8. IC = Spearman and Pearson correlation of pred vs realised forward return on rows\n   where both are non-NaN.\n\n## 3. Formulas\n- mid = (best bid + best ask)/2 if not given; forward log return ln(m_{t+1}/m_t).\n- z = (x - mean_train) / std_train (population std).\n- PC1 score = z . v1 where v1 = leading eigenvector of the correlation matrix of\n  the training block (sklearn centres again, but z already has zero mean).\n- OLS: y = a + b*PC1; pred_t = a + b*PC1_t.\n- Pearson IC = cov(p, r)/(sd_p sd_r); Spearman IC = Pearson on ranks (average ranks\n  for ties, as scipy does).\n\n## 4. Conventions\n- Window W counts rows (minutes) strictly before t; the test row itself is never in\n  training. The last training target r_{t-1} uses mid_t, which is known at t.\n- Level-0 OFI is the anchor for the PC1 sign.\n- Log returns, not simple returns.\n- Population std (ddof=0) for z-scoring, matching sklearn StandardScaler.\n- Output keys follow the pattern `<quantity>_index<k>` with level number embedded\n  where relevant; plain floats (cast numpy scalars).\n- The first row's flow uses the previous row = itself (flow 0) when computed from\n  snapshot differences; with direct flow columns row 0 is fully defined.\n\n## 5. Identities / sanity checks\n- corr(PC1_train, OFI_0_train) >= 0 in every window after the flip.\n- |IC| <= 1; number of predictions = n - W minus skipped windows.\n- Forward return at the reported early indices equals ln(mid[k+1]/mid[k]) exactly.\n- Weighted OFI identity recomputes exactly from the components.\n\n## 6. Pitfalls\n- Look-ahead: fitting scaler/PCA/OLS on data including row t, or using a centred\n  window.\n- Applying the sign flip to training scores but not to the test projection.\n- Using `pca.transform` on the test row with a freshly fitted scaler.\n- Z-scoring the whole sample once instead of inside each window.\n- Using ddof=1 for the z-score (differs from the reference).\n- Wrong sign of the ask term; forgetting |distance| (distances can be negative on\n  one side).\n- Using simple returns or backward returns as target.\n- Dropping NaN rows up front, which shifts every index-based output.\n\n## 7. Incomplete / ambiguous inputs\n- Missing target in a training block -> skip that step (leave NaN), do not impute.\n- Zero-variance feature in a window -> std set to 1 so the column is all zeros.\n- If the statement's flow definition is terse, derive it from the book identity\n  size_t = size_{t-1} + LO - C - M.\n\n## Why the old program failed (verified 2026-09-25)\n- ROOT CAUSE: it was written for a different schema (ts, bid_price_i, bid_volume_i, dist_bid_i) and derived\n  flows from volume deltas. The shipped ADA_1min.csv has, per level i in 0..14 and side in {bids, asks}:\n  `<side>_limit_notional_i`, `<side>_cancel_notional_i`, `<side>_market_notional_i`, `<side>_distance_i`,\n  plus `midpoint` and `system_time`. It crashed with KeyError ts and wrote nothing.\n- Second latent bug: after flipping pc1_train it re-tested the correlation on the FLIPPED series, so the\n  test observation was never flipped. Decide the flip once and apply it to the loading vector.\n\n## Formulas (as verified)\n- true_flow_side_i = limit_i - cancel_i - market_i (notional)\n- weighted_ofi_i = true_flow_bids_i / (1 + |bids_distance_i|) - true_flow_asks_i / (1 + |asks_distance_i|)\n- fwd_t = ln(midpoint_{t+1} / midpoint_t) (last row NaN)\n- step t >= 40: train rows t-40..t-1; z-score with ddof=0 (StandardScaler); PC1 loading = first right singular\n  vector; flip so corr(PC1_train, wofi_0_train) >= 0; OLS y = b0 + b1 PC1; PC1_t = z_t . v; pred_t = b0 + b1 PC1_t.\n- IC over rows with both prediction and realised fwd (the final row has no target).\n\n## Identities\nmean(PC1_train) = 0; OLS residuals sum to 0; |loading| = 1; flipping the sign of v leaves pred_t unchanged\n(b1 flips too), so predictions are sign-invariant while PC1 values are not."
+}

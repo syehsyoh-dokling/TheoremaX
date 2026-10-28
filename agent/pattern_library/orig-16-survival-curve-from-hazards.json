@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-16-survival-curve-from-hazards",
+ "category": "credit",
+ "difficulty": "hard",
+ "tags": [
+  "hazard",
+  "survival",
+  "monotonicity"
+ ],
+ "title": "Survival and default probabilities from a piecewise-constant hazard",
+ "keywords": [
+  "hazard",
+  "survival",
+  "tenor",
+  "probability",
+  "default",
+  "task",
+  "rates",
+  "columns",
+  "tenor_years",
+  "segment",
+  "year",
+  "build",
+  "curve",
+  "environment",
+  "hazard_curve",
+  "csv",
+  "hazard_rate",
+  "constant",
+  "across",
+  "one-year",
+  "rate",
+  "applies",
+  "piecewise-constant",
+  "time",
+  "exp",
+  "sum",
+  "segments",
+  "report",
+  "cumulative",
+  "marginal",
+  "incremental",
+  "chance",
+  "defaulting",
+  "during",
+  "before",
+  "survival_curve",
+  "parquet",
+  "column",
+  "meaning",
+  "matches"
+ ],
+ "deliverables": [
+  "hazard_curve.csv",
+  "survival_curve.parquet"
+ ],
+ "source": "\"\"\"Survival curve under a piecewise-constant hazard.\n\nS(T) = exp(-sum_k h_k * (t_k - t_{k-1})) over segments up to T, t_0 = 0.\ncumulative_default = 1 - S(T).\n\nASSUMPTION (the instruction states two readings of \"marginal\"): the column\ntable defines it as \"the increment over the previous tenor\", i.e. the\nunconditional probability of defaulting inside the segment,\nS(t_{k-1}) - S(t_k). That reading makes the marginals sum to the cumulative\ndefault probability, which is asserted. The conditional reading\n1 - S(t_k)/S(t_{k-1}) would not sum; it is not used.\n\"\"\"\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/hazard_curve.csv\"\nOUT = \"/app/output/survival_curve.parquet\"\n\n\ndef main() -> None:\n    curve = pd.read_csv(INPUT)\n    order = curve.sort_values(\"tenor_years\").reset_index(drop=True)\n    t = order[\"tenor_years\"].to_numpy(float)\n    h = order[\"hazard_rate\"].to_numpy(float)\n    seg = np.diff(np.concatenate([[0.0], t]))\n    survival = np.exp(-np.cumsum(h * seg))\n    cumulative = 1.0 - survival\n    prev = np.concatenate([[1.0], survival[:-1]])\n    marginal = prev - survival\n\n    assert np.all(np.diff(survival) <= 1e-15), \"survival cannot rise\"\n    assert abs(marginal.sum() - cumulative[-1]) < 1e-14\n\n    out = pd.DataFrame({\"tenor_years\": order[\"tenor_years\"], \"survival_probability\": survival,\n                        \"cumulative_default_probability\": cumulative,\n                        \"marginal_default_probability\": marginal})\n    out = out.set_index(\"tenor_years\").loc[curve[\"tenor_years\"]].reset_index()   # input row order\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    out.to_parquet(OUT, index=False)\n    assert len(pd.read_parquet(OUT)) == len(curve)\n    print(out.head())\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-16-survival-curve-from-hazards\\20260915T113743"
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "task_id": "t1s-17-huge-instruction",
+ "category": "risk-modeling",
+ "difficulty": "expert",
+ "tags": [
+  "scale"
+ ],
+ "title": "Tail risk with the contract buried after 3 MB of prose",
+ "keywords": [
+  "section",
+  "deliverable",
+  "only",
+  "liquidity",
+  "fragmentation",
+  "across",
+  "venues",
+  "interacts",
+  "latency-sensitive",
+  "quoting",
+  "ways",
+  "standard",
+  "midpoint",
+  "benchmarks",
+  "capture",
+  "appendix",
+  "revisits",
+  "venue-level",
+  "attribution",
+  "background",
+  "names",
+  "ret",
+  "quantile",
+  "deliverables",
+  "numpy",
+  "json",
+  "task",
+  "tail",
+  "metrics",
+  "long-form",
+  "brief",
+  "contract",
+  "appears",
+  "final",
+  "very",
+  "long",
+  "document",
+  "end",
+  "matters",
+  "environment"
+ ],
+ "deliverables": [
+  "returns.csv",
+  "reward.json",
+  "tail_metrics.json"
+ ],
+ "source": "import json, os\nimport numpy as np\nimport pandas as pd\nret = pd.read_csv(\"/input/environment/data/returns.csv\")[\"ret\"].to_numpy(float)\nq = np.quantile(ret, 0.01, method=\"linear\")\nos.makedirs(\"/app/output\", exist_ok=True)\njson.dump({\"var_99\": float(-q), \"es_99\": float(-ret[ret <= q].mean())}, open(\"/app/output/tail_metrics.json\", \"w\"), indent=2)\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "stress_suite",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\t1s-17-huge-instruction\\20260915T130238"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "task_id": "orig-01-implied-vol-surface",
+ "category": "derivatives-pricing",
+ "difficulty": "hard",
+ "tags": [
+  "implied-vol",
+  "root-finding",
+  "nested-json"
+ ],
+ "title": "Implied volatility surface from European call quotes",
+ "keywords": [
+  "quote",
+  "volatility",
+  "surface",
+  "json",
+  "task",
+  "recover",
+  "quotes",
+  "black-scholes",
+  "one",
+  "quote_id",
+  "strike",
+  "expiry_years",
+  "call_price",
+  "implied",
+  "background",
+  "you",
+  "european",
+  "call",
+  "single",
+  "underlying",
+  "internally",
+  "consistent",
+  "model",
+  "some",
+  "your",
+  "job",
+  "environment",
+  "parquet",
+  "holds",
+  "row",
+  "columns",
+  "spot",
+  "rate",
+  "every",
+  "find",
+  "reproduces",
+  "least",
+  "six",
+  "decimal",
+  "places"
+ ],
+ "deliverables": [
+  "implied_surface.json",
+  "quotes.parquet"
+ ],
+ "source": "\"\"\"Implied volatility surface from European call quotes (Black-Scholes, no dividends).\n\nMethod: for each quote, bracket the volatility and solve BS(sigma) = price with\nBrent's method to a price tolerance far tighter than the six decimals asked\nfor. A call price is strictly increasing in volatility (vega > 0), so a\nbracket that straddles the price holds exactly one root.\n\"\"\"\nimport json\nimport math\nimport os\n\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import brentq\nfrom scipy.stats import norm\n\nINPUT = \"/input/environment/data/quotes.parquet\"\nOUT_DIR = \"/app/output\"\n\n\ndef bs_call(spot: float, strike: float, t: float, r: float, sigma: float) -> float:\n    if sigma <= 0.0 or t <= 0.0:\n        return max(spot - strike * math.exp(-r * t), 0.0)\n    vol_t = sigma * math.sqrt(t)\n    d1 = (math.log(spot / strike) + (r + 0.5 * sigma * sigma) * t) / vol_t\n    d2 = d1 - vol_t\n    return spot * norm.cdf(d1) - strike * math.exp(-r * t) * norm.cdf(d2)\n\n\n#: Quotes are published to six decimals. A far out-of-the-money call can print\n#: as 0.000000 although its true volatility is positive: every sigma whose\n#: price rounds to zero reproduces the quote, so the volatility is not\n#: identified. Returning 0.0 would reprice exactly but is not a volatility the\n#: data came from. Aim instead for a price safely inside the rounding cell\n#: (4e-7 rounds to 0.000000), which yields a positive sigma that still\n#: reproduces the quote to six decimals.\nROUNDING_CELL_TARGET = 4e-7\n\n\ndef implied_vol(price: float, spot: float, strike: float, t: float, r: float) -> float:\n    lower_bound = max(spot - strike * math.exp(-r * t), 0.0)\n    target = price\n    if price - lower_bound < 5e-7:\n        target = lower_bound + ROUNDING_CELL_TARGET\n    f = lambda s: bs_call(spot, strike, t, r, s) - target\n    lo, hi = 1e-8, 1.0\n    while f(hi) < 0.0 and hi < 20.0:          # widen until the bracket holds the root\n        hi *= 2.0\n    return brentq(f, lo, hi, xtol=1e-14, rtol=1e-14, maxiter=500)\n\n\ndef main() -> None:\n    quotes = pd.read_parquet(INPUT)\n    surface = []\n    worst = 0.0\n    for row in quotes.itertuples(index=False):\n        sigma = implied_vol(float(row.call_price), float(row.spot), float(row.strike),\n                            float(row.expiry_years), float(row.rate))\n        repriced = bs_call(float(row.spot), float(row.strike), float(row.expiry_years),\n                           float(row.rate), sigma)\n        worst = max(worst, abs(repriced - float(row.call_price)))\n        surface.append({\n            \"quote_id\": str(row.quote_id),\n            \"strike\": float(row.strike),\n            \"expiry_years\": float(row.expiry_years),\n            \"implied_vol\": float(sigma),\n        })\n\n    assert len(surface) == len(quotes), \"one entry per input quote\"\n    assert worst < 1e-6, f\"repricing error {worst} exceeds the six-decimal requirement\"\n    assert all(np.isfinite(e[\"implied_vol\"]) and e[\"implied_vol\"] >= 0 for e in surface)\n\n    os.makedirs(OUT_DIR, exist_ok=True)\n    path = os.path.join(OUT_DIR, \"implied_surface.json\")\n    with open(path, \"w\", encoding=\"utf-8\") as fh:\n        json.dump({\"n_quotes\": len(surface), \"surface\": surface}, fh, indent=2)\n    with open(path, encoding=\"utf-8\") as fh:              # read back with the standard parser\n        back = json.load(fh)\n    assert back[\"n_quotes\"] == len(back[\"surface\"]) == len(quotes)\n    print(f\"wrote {len(surface)} quotes, max repricing error {worst:.2e}\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark2",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\orig-01-implied-vol-surface\\20260915T113456"
+ }
+}

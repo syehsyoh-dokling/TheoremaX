@@ -1,0 +1,63 @@
+{
+ "task_id": "hard-10-restricted-fund-runway",
+ "category": "ngo-finance",
+ "difficulty": "hard",
+ "tags": [
+  "ngo",
+  "restricted-funds",
+  "liquidity"
+ ],
+ "title": "Restricted fund spendability ranking for NGO programs",
+ "keywords": [
+  "metric",
+  "csv",
+  "records",
+  "columns",
+  "task",
+  "spendability",
+  "item_id",
+  "group",
+  "value_a",
+  "value_b",
+  "value_c",
+  "weight",
+  "every",
+  "rank",
+  "largest",
+  "rank_desc",
+  "json",
+  "restricted",
+  "fund",
+  "ranking",
+  "ngo",
+  "programs",
+  "environment",
+  "fund_positions",
+  "contains",
+  "synthetic",
+  "finance",
+  "sign",
+  "row",
+  "requested",
+  "rows",
+  "smallest",
+  "assign",
+  "integer",
+  "through",
+  "directory",
+  "parquet",
+  "object",
+  "n_rows",
+  "metric_total"
+ ],
+ "deliverables": [
+  "fund_positions.csv",
+  "spendability.csv"
+ ],
+ "source": "\"\"\"Row metric, descending rank, and a deliverable whose SHAPE follows its extension.\n\nmetric = value_a + weight * value_b - value_c\n\nEvaluated vectorised with numpy on the unrounded input columns exactly as the\ninstruction writes it - the checker recomputes it from the same file. Ranks\nare ordinal: 1 for the largest metric, every integer through n, ties broken by\ninput row order so no rank is skipped or shared. Columns that are not in the\nformula are read but deliberately unused.\n\nInput may be CSV, Parquet, or JSON (an array of records, or an object holding\none). Output CSV/Parquet: item_id, group, metric, rank_desc. Output JSON:\nn_rows, metric_total, absolute_metric_total, by_group (metric sum per group),\nand records carrying the same four columns.\n\"\"\"\nimport json\nimport os\n\nimport numpy as np\nimport pandas as pd\n\nINPUT = \"/input/environment/data/fund_positions.csv\"\nOUT = \"/app/output/spendability.csv\"\n\n\ndef read_table(path: str) -> pd.DataFrame:\n    if path.endswith(\".parquet\"):\n        return pd.read_parquet(path)\n    if path.endswith(\".json\"):\n        with open(path, encoding=\"utf-8\") as fh:\n            raw = json.load(fh)\n        if isinstance(raw, dict):\n            raw = next(v for v in raw.values() if isinstance(v, list))\n        return pd.DataFrame(raw)\n    return pd.read_csv(path)\n\n\ndef main() -> None:\n    df = read_table(INPUT)\n    value_a = df[\"value_a\"].to_numpy(float)\n    value_b = df[\"value_b\"].to_numpy(float)\n    value_c = df[\"value_c\"].to_numpy(float)\n    weight = df[\"weight\"].to_numpy(float)\n    sign = df[\"sign\"].to_numpy(float)\n    with np.errstate(divide=\"ignore\", invalid=\"ignore\"):\n        metric = np.asarray(value_a + weight * value_b - value_c, dtype=float)\n    if metric.ndim == 0:\n        metric = np.full(len(df), float(metric))\n    assert metric.shape == (len(df),), \"one metric per row\"\n\n    order = np.argsort(-metric, kind=\"stable\")      # largest first, ties keep row order\n    rank = np.empty(len(df), dtype=int)\n    rank[order] = np.arange(1, len(df) + 1)\n    out = pd.DataFrame({\"item_id\": df[\"item_id\"], \"group\": df[\"group\"],\n                        \"metric\": metric, \"rank_desc\": rank})\n    assert sorted(out[\"rank_desc\"]) == list(range(1, len(df) + 1)), \"every integer rank through n\"\n\n    os.makedirs(os.path.dirname(OUT), exist_ok=True)\n    if OUT.endswith(\".json\"):\n        assert np.isfinite(metric).all(), \"JSON cannot carry a non-finite metric\"\n        ordered = out.sort_values(\"rank_desc\")\n        payload = {\n            \"n_rows\": int(len(out)),\n            \"metric_total\": float(np.sum(metric)),\n            \"absolute_metric_total\": float(np.sum(np.abs(metric))),\n            # by_group is a list of per-group records carrying the same aggregates as the top\n            # level. A flat {group: total} object is not a table: a consumer that reads it with\n            # pandas gets \"If using all scalar values, you must pass an index\".\n            \"by_group\": [{\"group\": str(g), \"metric\": float(sub[\"metric\"].sum()), \"n_rows\": int(len(sub)),\n                           \"metric_total\": float(sub[\"metric\"].sum()),\n                           \"absolute_metric_total\": float(sub[\"metric\"].abs().sum())}\n                         for g, sub in out.groupby(\"group\", sort=True)],\n            \"records\": [{\"item_id\": str(r.item_id), \"group\": str(r.group),\n                          \"metric\": float(r.metric), \"rank_desc\": int(r.rank_desc)}\n                        for r in ordered.itertuples(index=False)],\n        }\n        with open(OUT, \"w\", encoding=\"utf-8\") as fh:\n            json.dump(payload, fh, indent=2)\n        with open(OUT, encoding=\"utf-8\") as fh:\n            assert len(json.load(fh)[\"records\"]) == len(df)\n    elif OUT.endswith(\".parquet\"):\n        out.to_parquet(OUT, index=False)\n        assert len(pd.read_parquet(OUT)) == len(df)\n    else:\n        out.to_csv(OUT, index=False, float_format=\"%.17g\")\n        assert list(pd.read_csv(OUT).columns) == [\"item_id\", \"group\", \"metric\", \"rank_desc\"]\n    print(f\"{len(out)} rows -> {OUT}\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+ "author": "teacher",
+ "provenance": {
+  "batch": "benchmark",
+  "grade_dir": "C:\\Users\\Saifuddin\\Documents\\agenthon-t1\\teacher_work\\grades\\hard-10-restricted-fund-runway\\20260915T114231"
+ }
+}
